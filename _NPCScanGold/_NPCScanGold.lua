@@ -30,6 +30,7 @@ me.OptionsDefault = {
 	AlertSound = nil; -- Default sound
 	MapPins = true;
 	MinimapIcon = true;
+	LiveScan = true;
 };
 me.OptionsCharacterDefault = {
 	Version = me.Version;
@@ -425,6 +426,7 @@ function me.Synchronize ( Options, OptionsCharacter )
 	me.SetAlertSound( Options.AlertSound );
 	me.SetMapPins( Options.MapPins );
 	me.SetMinimapIcon( Options.MinimapIcon );
+	me.SetLiveScan( Options.LiveScan );
 	if ( Options.MinimapIconSettings ) then -- Keeps the button where the player dragged it
 		me.Options.MinimapIconSettings.minimapPos = Options.MinimapIconSettings.minimapPos;
 	end

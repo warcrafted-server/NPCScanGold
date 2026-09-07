@@ -10,6 +10,7 @@ local me = CreateFrame( "Frame" );
 _NPCScanGold.Config = me;
 
 me.CacheWarnings = CreateFrame( "CheckButton", "_NPCScanGoldConfigCacheWarningsCheckbox", me, "InterfaceOptionsCheckButtonTemplate" );
+me.LiveScan = CreateFrame( "CheckButton", "_NPCScanGoldConfigLiveScanCheckbox", me, "InterfaceOptionsCheckButtonTemplate" );
 me.MapPins = CreateFrame( "CheckButton", "_NPCScanGoldConfigMapPinsCheckbox", me, "InterfaceOptionsCheckButtonTemplate" );
 me.MinimapIcon = CreateFrame( "CheckButton", "_NPCScanGoldConfigMinimapIconCheckbox", me, "InterfaceOptionsCheckButtonTemplate" );
 
@@ -31,6 +32,10 @@ end
 --- Sets the CacheWarnings option when its checkbox is clicked.
 function me.CacheWarnings.setFunc ( Enable )
 	_NPCScanGold.SetCacheWarnings( Enable == "1" );
+end
+--- Enables or disables scanning for rares near you.
+function me.LiveScan.setFunc ( Enable )
+	_NPCScanGold.SetLiveScan( Enable == "1" );
 end
 --- Shows or hides the rare spawn pins on the world map.
 function me.MapPins.setFunc ( Enable )
@@ -106,7 +111,11 @@ me.CacheWarnings:SetPoint( "TOPLEFT", SubText, "BOTTOMLEFT", -2, -8 );
 _G[ me.CacheWarnings:GetName().."Text" ]:SetText( L.CONFIG_CACHEWARNINGS );
 me.CacheWarnings.tooltipText = L.CONFIG_CACHEWARNINGS_DESC;
 
-me.MapPins:SetPoint( "TOPLEFT", me.CacheWarnings, "BOTTOMLEFT", 0, -4 );
+me.LiveScan:SetPoint( "TOPLEFT", me.CacheWarnings, "BOTTOMLEFT", 0, -4 );
+_G[ me.LiveScan:GetName().."Text" ]:SetText( L.CONFIG_LIVESCAN );
+me.LiveScan.tooltipText = L.CONFIG_LIVESCAN_DESC;
+
+me.MapPins:SetPoint( "TOPLEFT", me.LiveScan, "BOTTOMLEFT", 0, -4 );
 _G[ me.MapPins:GetName().."Text" ]:SetText( L.CONFIG_MAPPINS );
 me.MapPins.tooltipText = L.CONFIG_MAPPINS_DESC;
 

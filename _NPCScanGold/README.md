@@ -11,9 +11,13 @@ forma que `_NPCScan` también las vigila sin tener que añadirlas a mano una por
 
 ## Características
 
-- **Detección de `_NPCScan`:** escanea por ID de criatura contra objetivos propios, del ratón y de
-  los miembros del grupo, así que avisa aunque no llegues a ver al raro tú mismo.
-- **Base de datos completa:** 408 raros de todo WotLK activos desde el primer momento.
+- **Doble detección.** El motor de `_NPCScan` avisa en cuanto el nombre de la criatura entra en la
+  caché del cliente, que da mucho alcance pero solo funciona una vez por caché. En paralelo, una
+  detección en vivo al estilo SilverDragon vigila tu objetivo, el ratón por encima, los objetivos
+  del grupo y los nameplates, y esa sí avisa de raros ya cacheados. Cada una se activa por
+  separado.
+- **Base de datos completa:** 408 raros de todo WotLK activos desde el primer momento. La detección
+  en vivo además avisa de cualquier mob con clasificación de raro, esté o no en la lista.
 - **Marcadores en el mapa del mundo:** los puntos de aparición conocidos de cada raro, con nombre,
   nivel, tipo, si es domesticable y si ya está en caché al pasar el ratón por encima. Sin
   dependencias externas (no hace falta HandyNotes ni Cartographer).
@@ -30,6 +34,7 @@ Todo se configura desde `Interfaz → Accesorios → _NPCScan Gold` (o con `/npc
 | Opción | Qué hace |
 | --- | --- |
 | Recordatorios de caché | Avisa al entrar de qué raros ya están en caché y no se pueden escanear. |
+| Avisar de raros cercanos | Detección en vivo: avisa de raros que tengas delante aunque estén cacheados. |
 | Marcadores en el mapa | Muestra u oculta los puntos de aparición en el mapa del mundo. |
 | Botón de minimapa | Muestra u oculta el botón junto al minimapa. |
 | Sonido de aviso | Elige el sonido de alerta (admite sonidos de addons `SharedMedia`). |
@@ -37,6 +42,17 @@ Todo se configura desde `Interfaz → Accesorios → _NPCScan Gold` (o con `/npc
 
 La pestaña `Búsqueda` mantiene la lista de NPCs vigilados, donde se pueden añadir o quitar raros
 concretos.
+
+## Sobre la caché del cliente
+
+El escaneo original de `_NPCScan` detecta a un raro en el momento en que su nombre entra en la
+caché de criaturas del cliente (`Cache/WDB`). Una vez que un raro está cacheado, ese método ya no
+puede volver a detectarlo: el addon lo saca de la lista de escaneo y lo enseña en el aviso de
+"ya en caché" al conectarte (`/npcscan cache` lista los que están así).
+
+Ningún addon puede vaciar esa caché, ni entera ni por criatura: hay que borrar la carpeta
+`Cache/WDB` con el juego cerrado. Para no depender de eso está la detección en vivo, que no mira la
+caché y avisa igualmente cuando el raro está delante de ti.
 
 ## Origen y diseño
 

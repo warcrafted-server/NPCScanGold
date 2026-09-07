@@ -3,6 +3,22 @@
 Todos los cambios relevantes de este proyecto se documentan en este archivo.
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [1.2.0] - 2026-09-07
+
+### Añadido
+- Detección en vivo al estilo SilverDragon (`_NPCScanGold.Live.lua`): vigila tu objetivo, el ratón
+  por encima, los objetivos de tu grupo y los nameplates cercanos, y avisa de cualquier mob de
+  clasificación raro o raro élite. No depende de la caché del cliente, así que también avisa de
+  raros que ya estaban cacheados y que el escaneo normal de `_NPCScan` no puede detectar. Filtra
+  mascotas de cazador (`UnitPlayerControlled`) y mobs muertos.
+- Opción para activar o desactivar la detección en vivo, en el panel de configuración.
+
+### Notas
+- Los avisos comparten un tiempo de espera de 5 minutos por criatura, venga el aviso del escaneo
+  por caché o de la detección en vivo, para no duplicarlos.
+- La detección en vivo no se limita a las 408 criaturas de la base de datos: avisa de cualquier mob
+  con clasificación de raro, esté o no en la lista.
+
 ## [1.1.0] - 2026-09-07
 
 ### Añadido
