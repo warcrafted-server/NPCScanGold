@@ -26,7 +26,11 @@ forma que `_NPCScan` también las vigila sin tener que añadirlas a mano una por
 
 ## Instalación
 
-Copia la carpeta `_NPCScanGold` en `World of Warcraft/Interface/AddOns/`.
+Copia la carpeta `_NPCScanGold` de este repositorio (la que contiene `_NPCScanGold.toc`) dentro de
+`World of Warcraft/Interface/AddOns/`, de forma que quede como
+`Interface/AddOns/_NPCScanGold/_NPCScanGold.toc`. El nombre de la carpeta tiene que coincidir
+exactamente con el del `.toc`; si copias el repositorio entero (renombrado `NPCScanGold` al
+clonarlo) el addon no aparecerá en el juego.
 
 ## Créditos
 
