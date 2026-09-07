@@ -10,6 +10,8 @@ local me = CreateFrame( "Frame" );
 _NPCScanGold.Config = me;
 
 me.CacheWarnings = CreateFrame( "CheckButton", "_NPCScanGoldConfigCacheWarningsCheckbox", me, "InterfaceOptionsCheckButtonTemplate" );
+me.MapPins = CreateFrame( "CheckButton", "_NPCScanGoldConfigMapPinsCheckbox", me, "InterfaceOptionsCheckButtonTemplate" );
+me.MinimapIcon = CreateFrame( "CheckButton", "_NPCScanGoldConfigMinimapIconCheckbox", me, "InterfaceOptionsCheckButtonTemplate" );
 
 local AlertOptions = CreateFrame( "Frame", "_NPCScanGoldConfigAlert", me, "OptionsBoxTemplate" );
 me.Test = CreateFrame( "Button", "_NPCScanGoldTest", AlertOptions, "GameMenuButtonTemplate" );
@@ -29,6 +31,14 @@ end
 --- Sets the CacheWarnings option when its checkbox is clicked.
 function me.CacheWarnings.setFunc ( Enable )
 	_NPCScanGold.SetCacheWarnings( Enable == "1" );
+end
+--- Shows or hides the rare spawn pins on the world map.
+function me.MapPins.setFunc ( Enable )
+	_NPCScanGold.SetMapPins( Enable == "1" );
+end
+--- Shows or hides the minimap button.
+function me.MinimapIcon.setFunc ( Enable )
+	_NPCScanGold.SetMinimapIcon( Enable == "1" );
 end
 
 --- Plays a fake found alert and shows the target button.
@@ -96,9 +106,17 @@ me.CacheWarnings:SetPoint( "TOPLEFT", SubText, "BOTTOMLEFT", -2, -8 );
 _G[ me.CacheWarnings:GetName().."Text" ]:SetText( L.CONFIG_CACHEWARNINGS );
 me.CacheWarnings.tooltipText = L.CONFIG_CACHEWARNINGS_DESC;
 
+me.MapPins:SetPoint( "TOPLEFT", me.CacheWarnings, "BOTTOMLEFT", 0, -4 );
+_G[ me.MapPins:GetName().."Text" ]:SetText( L.CONFIG_MAPPINS );
+me.MapPins.tooltipText = L.CONFIG_MAPPINS_DESC;
+
+me.MinimapIcon:SetPoint( "TOPLEFT", me.MapPins, "BOTTOMLEFT", 0, -4 );
+_G[ me.MinimapIcon:GetName().."Text" ]:SetText( L.CONFIG_MINIMAPICON );
+me.MinimapIcon.tooltipText = L.CONFIG_MINIMAPICON_DESC;
+
 
 -- Alert options section
-AlertOptions:SetPoint( "TOPLEFT", me.CacheWarnings, "BOTTOMLEFT", 0, -16 );
+AlertOptions:SetPoint( "TOPLEFT", me.MinimapIcon, "BOTTOMLEFT", 0, -16 );
 AlertOptions:SetPoint( "BOTTOMRIGHT", -14, 16 );
 _G[ AlertOptions:GetName().."Title" ]:SetText( L.CONFIG_ALERT );
 

@@ -11,12 +11,12 @@
 ## X-Credits-koKR: Localization: kdw112
 ## X-Credits-ruRU: Localization: StingerSoft
 ## X-Credits-zhTW: Localization: s8095324, pepper_ep
-## Version: 1.0.0
+## Version: 1.1.0
 ## X-Category: Miscellaneous
 ## X-License: GPLv3
 ## X-Localizations: enUS, frFR, koKR, ruRU, zhTW
 ## X-CompatibleLocales: deDE, enUS, esES, esMX, frFR, koKR, ruRU, zhCN, zhTW
-## X-Embeds: LibTextTable-1.0, LibSharedMedia-3.0
+## X-Embeds: LibTextTable-1.0, LibSharedMedia-3.0, LibDataBroker-1.1, LibDBIcon-1.0, LibBabble-Zone-3.0
 ## SavedVariables: _NPCScanGoldOptions
 ## SavedVariablesPerCharacter: _NPCScanGoldOptionsCharacter
 ## OptionalDeps: Ace3, LibTextTable-1.0, LibSharedMedia-3.0, LibRareSpawns
@@ -31,6 +31,8 @@ _NPCScanGold.Button.lua
 _NPCScanGold.Overlays.lua
 _NPCScanGold.TamableIDs.lua
 _NPCScanGold.RaresDB.lua
+_NPCScanGold.Map.lua
+_NPCScanGold.Broker.lua
 
 _NPCScanGold.Config.lua
 _NPCScanGold.Config.Search.lua

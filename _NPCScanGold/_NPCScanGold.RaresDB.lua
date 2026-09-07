@@ -1,838 +1,433 @@
 --[[****************************************************************************
   * _NPCScanGold                                                               *
-  * _NPCScanGold.RaresDB.lua - Default rare NPC list imported from SilverDragon *
-  * by Kemayo, mapped onto _NPCScan's per-continent WorldID scan system.       *
+  * _NPCScanGold.RaresDB.lua - Rare NPC database imported from SilverDragon.   *
   ****************************************************************************]]
 
 
 local AddOnName, me = ...;
 
-local RareWorldIDs = { --- [ NpcID ] = Continent ID (1 Kalimdor, 2 Eastern Kingdoms, 3 Outland, 4 Northrend) or instance name.
-	[ 61 ] = 2; -- "Thuros Lightfingers" (Elwynn Forest)
-	[ 79 ] = 2; -- "Narg the Taskmaster" (Elwynn Forest)
-	[ 99 ] = 2; -- "Morgaine the Sly" (Elwynn Forest)
-	[ 100 ] = 2; -- "Gruff Swiftbite" (Elwynn Forest)
-	[ 462 ] = 2; -- "Vultros" (Westfall)
-	[ 471 ] = 2; -- "Mother Fang" (Elwynn Forest)
-	[ 472 ] = 2; -- "Fedfennel" (Elwynn Forest)
-	[ 503 ] = 2; -- "Lord Malathrom" (Duskwood)
-	[ 506 ] = 2; -- "Sergeant Brashclaw" (Westfall)
-	[ 507 ] = 2; -- "Fenros" (Duskwood)
-	[ 519 ] = 2; -- "Slark" (Westfall)
-	[ 520 ] = 2; -- "Brack" (Westfall)
-	[ 521 ] = 2; -- "Lupos" (Duskwood)
-	[ 534 ] = 2; -- "Nefaru" (Duskwood)
-	[ 572 ] = 2; -- "Leprithus" (Westfall)
-	[ 573 ] = 2; -- "Foe Reaper 4000" (Westfall)
-	[ 574 ] = 2; -- "Naraxis" (Duskwood)
-	[ 584 ] = 2; -- "Kazon" (Redridge Mountains)
-	[ 616 ] = 2; -- "Chatter" (Redridge Mountains)
-	[ 763 ] = 2; -- "Lost One Chieftain" (Swamp of Sorrows)
-	[ 771 ] = 2; -- "Commander Felstrom" (Duskwood)
-	[ 947 ] = 2; -- "Rohh the Silent" (Redridge Mountains)
-	[ 1037 ] = 2; -- "Dragonmaw Battlemaster" (Wetlands)
-	[ 1063 ] = 2; -- "Jade" (Swamp of Sorrows)
-	[ 1106 ] = 2; -- "Lost One Cook" (Swamp of Sorrows)
-	[ 1112 ] = 2; -- "Leech Widow" (Wetlands)
-	[ 1119 ] = 2; -- "Hammerspine" (Dun Morogh)
-	[ 1130 ] = 2; -- "Bjarn" (Dun Morogh)
-	[ 1132 ] = 2; -- "Timber" (Dun Morogh)
-	[ 1137 ] = 2; -- "Edan the Howler" (Dun Morogh)
-	[ 1140 ] = 2; -- "Razormaw Matriarch" (Wetlands)
-	[ 1260 ] = 2; -- "Great Father Arctikus" (Dun Morogh)
-	[ 1398 ] = 2; -- "Boss Galgosh" (Loch Modan)
-	[ 1399 ] = 2; -- "Magosh" (Loch Modan)
-	[ 1424 ] = 2; -- "Master Digger" (Westfall)
-	[ 1425 ] = 2; -- "Grizlak" (Loch Modan)
-	[ 1531 ] = 2; -- "Lost Soul" (Tirisfal Glades)
-	[ 1533 ] = 2; -- "Tormented Spirit" (Tirisfal Glades)
-	[ 1552 ] = 2; -- "Scale Belly" (Stranglethorn Vale)
-	[ 1837 ] = 2; -- "Scarlet Judge" (Western Plaguelands)
-	[ 1838 ] = 2; -- "Scarlet Interrogator" (Western Plaguelands)
-	[ 1839 ] = 2; -- "Scarlet High Clerist" (Western Plaguelands)
-	[ 1841 ] = 2; -- "Scarlet Executioner" (Western Plaguelands)
-	[ 1843 ] = 2; -- "Foreman Jerris" (Western Plaguelands)
-	[ 1844 ] = 2; -- "Foreman Marcrid" (Western Plaguelands)
-	[ 1847 ] = 2; -- "Foulmane" (Western Plaguelands)
-	[ 1848 ] = 2; -- "Lord Maldazzar" (Western Plaguelands)
-	[ 1850 ] = 2; -- "Putridius" (Western Plaguelands)
-	[ 1851 ] = 2; -- "The Husk" (Western Plaguelands)
-	[ 1885 ] = 2; -- "Scarlet Smith" (Western Plaguelands)
-	[ 1910 ] = 2; -- "Muad" (Tirisfal Glades)
-	[ 1911 ] = 2; -- "Deeb" (Tirisfal Glades)
-	[ 1920 ] = 2; -- "Dalaran Spellscribe" (Silverpine Forest)
-	[ 1936 ] = 2; -- "Farmer Solliden" (Tirisfal Glades)
-	[ 1944 ] = 2; -- "Rot Hide Bruiser" (Silverpine Forest)
-	[ 1948 ] = 2; -- "Snarlmane" (Silverpine Forest)
-	[ 2090 ] = 2; -- "Ma'ruk Wyrmscale" (Wetlands)
-	[ 2108 ] = 2; -- "Garneg Charskull" (Wetlands)
-	[ 2172 ] = 1; -- "Strider Clutchmother" (Darkshore)
-	[ 2175 ] = 1; -- "Shadowclaw" (Darkshore)
-	[ 2184 ] = 1; -- "Lady Moongazer" (Darkshore)
-	[ 2186 ] = 1; -- "Carnivous the Breaker" (Darkshore)
-	[ 2191 ] = 1; -- "Licillin" (Darkshore)
-	[ 2192 ] = 1; -- "Firecaller Radison" (Darkshore)
-	[ 2258 ] = 2; -- "Stone Fury" (Alterac Mountains)
-	[ 2283 ] = 2; -- "Ravenclaw Regent" (Silverpine Forest)
-	[ 2447 ] = 2; -- "Narillasanz" (Alterac Mountains)
-	[ 2452 ] = 2; -- "Skhowl" (Alterac Mountains)
-	[ 2453 ] = 2; -- "Lo'Grosh" (Alterac Mountains)
-	[ 2476 ] = 2; -- "Large Loch Crocolisk" (Loch Modan)
-	[ 2541 ] = 2; -- "Lord Sakrasis" (Stranglethorn Vale)
-	[ 2598 ] = 2; -- "Darbel Montrose" (Arathi Highlands)
-	[ 2600 ] = 2; -- "Singer" (Arathi Highlands)
-	[ 2601 ] = 2; -- "Foulbelly" (Arathi Highlands)
-	[ 2602 ] = 2; -- "Ruul Onestone" (Arathi Highlands)
-	[ 2603 ] = 2; -- "Kovork" (Arathi Highlands)
-	[ 2604 ] = 2; -- "Molok the Crusher" (Arathi Highlands)
-	[ 2605 ] = 2; -- "Zalas Witherbark" (Arathi Highlands)
-	[ 2606 ] = 2; -- "Nimar the Slayer" (Arathi Highlands)
-	[ 2609 ] = 2; -- "Geomancer Flintdagger" (Arathi Highlands)
-	[ 2744 ] = 2; -- "Shadowforge Commander" (Badlands)
-	[ 2749 ] = 2; -- "Siege Golem" (Badlands)
-	[ 2751 ] = 2; -- "War Golem" (Badlands)
-	[ 2752 ] = 2; -- "Rumbler" (Badlands)
-	[ 2753 ] = 2; -- "Barnabus" (Badlands)
-	[ 2754 ] = 2; -- "Anathemus" (Badlands)
-	[ 2779 ] = 2; -- "Prince Nazjak" (Arathi Highlands)
-	[ 2850 ] = 2; -- "Broken Tooth" (Badlands)
-	[ 2931 ] = 2; -- "Zaricotl" (Badlands)
-	[ 3056 ] = 1; -- "Ghost Howl" (Mulgore)
-	[ 3068 ] = 1; -- "Mazzranache" (Mulgore)
-	[ 3253 ] = 1; -- "Silithid Harvester" (The Barrens)
-	[ 3270 ] = 1; -- "Elder Mystic Razorsnout" (The Barrens)
-	[ 3295 ] = 1; -- "Sludge Beast" (The Barrens)
-	[ 3398 ] = 1; -- "Gesharahan" (The Barrens)
-	[ 3470 ] = 1; -- "Rathorian" (The Barrens)
-	[ 3535 ] = 1; -- "Blackmoss the Fetid" (Teldrassil)
-	[ 3581 ] = 2; -- "Sewer Beast" (Stormwind City)
-	[ 3586 ] = "The Deadmines"; -- "Miner Johnson" (The Deadmines)
-	[ 3652 ] = "Wailing Caverns"; -- "Trigore the Lasher" (Wailing Caverns)
-	[ 3672 ] = "Wailing Caverns"; -- "Boahn" (Wailing Caverns)
-	[ 3735 ] = 1; -- "Apothecary Falthis" (Ashenvale)
-	[ 3773 ] = 1; -- "Akkrilus" (Ashenvale)
-	[ 3792 ] = 1; -- "Terrowulf Packlord" (Ashenvale)
-	[ 3872 ] = "Shadowfang Keep"; -- "Deathsworn Captain" (Shadowfang Keep)
-	[ 4015 ] = 1; -- "Pridewing Patriarch" (Stonetalon Mountains)
-	[ 4030 ] = 1; -- "Vengeful Ancient" (Stonetalon Mountains)
-	[ 4066 ] = 1; -- "Nal'taszar" (Stonetalon Mountains)
-	[ 4132 ] = 1; -- "Silithid Ravager" (Thousand Needles)
-	[ 4339 ] = 1; -- "Brimgore" (Dustwallow Marsh)
-	[ 4380 ] = 1; -- "Darkmist Widow" (Dustwallow Marsh)
-	[ 5343 ] = 1; -- "Lady Szallah" (Feralas)
-	[ 5345 ] = 1; -- "Diamond Head" (Feralas)
-	[ 5346 ] = 1; -- "Bloodroar the Stalker" (Feralas)
-	[ 5347 ] = 1; -- "Antilus the Soarer" (Feralas)
-	[ 5349 ] = 1; -- "Arash-ethis" (Feralas)
-	[ 5350 ] = 1; -- "Qirot" (Feralas)
-	[ 5352 ] = 1; -- "Old Grizzlegut" (Feralas)
-	[ 5354 ] = 1; -- "Gnarl Leafbrother" (Feralas)
-	[ 5356 ] = 1; -- "Snarler" (Feralas)
-	[ 5399 ] = "Sunken Temple"; -- "Veyzhak the Cannibal" (Sunken Temple)
-	[ 5400 ] = "Sunken Temple"; -- "Zekkis" (Sunken Temple)
-	[ 5785 ] = 1; -- "Sister Hatelash" (Mulgore)
-	[ 5786 ] = 1; -- "Snagglespear" (Mulgore)
-	[ 5787 ] = 1; -- "Enforcer Emilgund" (Mulgore)
-	[ 5797 ] = 1; -- "Aean Swiftriver" (The Barrens)
-	[ 5798 ] = 1; -- "Thora Feathermoon" (The Barrens)
-	[ 5799 ] = 1; -- "Hannah Bladeleaf" (The Barrens)
-	[ 5800 ] = 1; -- "Marcus Bel" (The Barrens)
-	[ 5807 ] = 1; -- "The Rake" (Mulgore)
-	[ 5808 ] = 1; -- "Warlord Kolkanis" (Durotar)
-	[ 5809 ] = 1; -- "Watch Commander Zalaphil" (Durotar)
-	[ 5822 ] = 1; -- "Felweaver Scornn" (Durotar)
-	[ 5823 ] = 1; -- "Death Flayer" (Durotar)
-	[ 5824 ] = 1; -- "Captain Flat Tusk" (Durotar)
-	[ 5826 ] = 1; -- "Geolord Mottle" (Durotar)
-	[ 5827 ] = 1; -- "Brontus" (The Barrens)
-	[ 5828 ] = 1; -- "Humar the Pridelord" (The Barrens)
-	[ 5829 ] = 1; -- "Snort the Heckler" (The Barrens)
-	[ 5830 ] = 1; -- "Sister Rathtalon" (The Barrens)
-	[ 5831 ] = 1; -- "Swiftmane" (The Barrens)
-	[ 5832 ] = 1; -- "Thunderstomp" (The Barrens)
-	[ 5834 ] = 1; -- "Azzere the Skyblade" (The Barrens)
-	[ 5835 ] = 1; -- "Foreman Grills" (The Barrens)
-	[ 5836 ] = 1; -- "Engineer Whirleygig" (The Barrens)
-	[ 5837 ] = 1; -- "Stonearm" (The Barrens)
-	[ 5838 ] = 1; -- "Brokespear" (The Barrens)
-	[ 5841 ] = 1; -- "Rocklance" (The Barrens)
-	[ 5842 ] = 1; -- "Takk the Leaper" (The Barrens)
-	[ 5847 ] = 1; -- "Heggin Stonewhisker" (The Barrens)
-	[ 5848 ] = 1; -- "Malgin Barleybrew" (The Barrens)
-	[ 5849 ] = 1; -- "Digger Flameforge" (The Barrens)
-	[ 5851 ] = 1; -- "Captain Gerogg Hammertoe" (The Barrens)
-	[ 5859 ] = 1; -- "Hagg Taurenbane" (The Barrens)
-	[ 5863 ] = 1; -- "Geopriest Gukk'rok" (The Barrens)
-	[ 5864 ] = 1; -- "Swinegart Spearhide" (The Barrens)
-	[ 5865 ] = 1; -- "Dishu" (The Barrens)
-	[ 5915 ] = 1; -- "Brother Ravenoak" (Stonetalon Mountains)
-	[ 5916 ] = 1; -- "Sentinel Amarassan" (Stonetalon Mountains)
-	[ 5928 ] = 1; -- "Sorrow Wing" (Stonetalon Mountains)
-	[ 5930 ] = 1; -- "Sister Riven" (Stonetalon Mountains)
-	[ 5931 ] = 1; -- "Foreman Rigger" (Stonetalon Mountains)
-	[ 5932 ] = 1; -- "Taskmaster Whipfang" (Stonetalon Mountains)
-	[ 5933 ] = 1; -- "Achellios the Banished" (Thousand Needles)
-	[ 5934 ] = 1; -- "Heartrazor" (Thousand Needles)
-	[ 5935 ] = 1; -- "Ironeye the Invincible" (Thousand Needles)
-	[ 5937 ] = 1; -- "Vile Sting" (Thousand Needles)
-	[ 6118 ] = 1; -- "Varo'then's Ghost" (Azshara)
-	[ 6581 ] = 1; -- "Ravasaur Matriarch" (Un'Goro Crater)
-	[ 6582 ] = 1; -- "Clutchmother Zavas" (Un'Goro Crater)
-	[ 6583 ] = 1; -- "Gruff" (Un'Goro Crater)
-	[ 6584 ] = 1; -- "King Mosh" (Un'Goro Crater)
-	[ 6585 ] = 1; -- "Uhk'loc" (Un'Goro Crater)
-	[ 6646 ] = 1; -- "Monnos the Elder" (Azshara)
-	[ 6647 ] = 1; -- "Magister Hawkhelm" (Azshara)
-	[ 6648 ] = 1; -- "Antilos" (Azshara)
-	[ 6649 ] = 1; -- "Lady Sesspira" (Azshara)
-	[ 6650 ] = 1; -- "General Fangferror" (Azshara)
-	[ 6651 ] = 1; -- "Gatekeeper Rageroar" (Azshara)
-	[ 6652 ] = 1; -- "Master Feardred" (Azshara)
-	[ 7015 ] = 1; -- "Flagglemurk the Cruel" (Darkshore)
-	[ 7016 ] = 1; -- "Lady Vespira" (Darkshore)
-	[ 7017 ] = 1; -- "Lord Sinslayer" (Darkshore)
-	[ 7057 ] = "Uldaman"; -- "Digmaster Shovelphlange" (Uldaman)
-	[ 7104 ] = 1; -- "Dessecus" (Felwood)
-	[ 7137 ] = 1; -- "Immolatus" (Felwood)
-	[ 7895 ] = 1; -- "Ambassador Bloodrage" (The Barrens)
-	[ 8199 ] = 1; -- "Warleader Krazzilak" (Tanaris)
-	[ 8200 ] = 1; -- "Jin'Zallah the Sandbringer" (Tanaris)
-	[ 8201 ] = 1; -- "Omgorn the Lost" (Tanaris)
-	[ 8202 ] = 1; -- "Cyclok the Mad" (Tanaris)
-	[ 8203 ] = 1; -- "Kregg Keelhaul" (Tanaris)
-	[ 8204 ] = 1; -- "Soriid the Devourer" (Tanaris)
-	[ 8205 ] = 1; -- "Haarka the Ravenous" (Tanaris)
-	[ 8207 ] = 1; -- "Greater Firebird" (Tanaris)
-	[ 8208 ] = 1; -- "Murderous Blisterpaw" (Tanaris)
-	[ 8210 ] = 2; -- "Razortalon" (The Hinterlands)
-	[ 8211 ] = 2; -- "Old Cliff Jumper" (The Hinterlands)
-	[ 8212 ] = 2; -- "The Reak" (The Hinterlands)
-	[ 8213 ] = 2; -- "Ironback" (The Hinterlands)
-	[ 8214 ] = 2; -- "Jalinde Summerdrake" (The Hinterlands)
-	[ 8215 ] = 2; -- "Grimungous" (The Hinterlands)
-	[ 8216 ] = 2; -- "Retherokk the Berserker" (The Hinterlands)
-	[ 8217 ] = 2; -- "Mith'rethis the Enchanter" (The Hinterlands)
-	[ 8218 ] = 2; -- "Witherheart the Stalker" (The Hinterlands)
-	[ 8219 ] = 2; -- "Zul'arek Hatefowler" (The Hinterlands)
-	[ 8277 ] = 2; -- "Rekk'tilac" (Searing Gorge)
-	[ 8278 ] = 2; -- "Smoldar" (Searing Gorge)
-	[ 8279 ] = 2; -- "Faulty War Golem" (Searing Gorge)
-	[ 8280 ] = 2; -- "Shleipnarr" (Searing Gorge)
-	[ 8281 ] = 2; -- "Scald" (Searing Gorge)
-	[ 8282 ] = 2; -- "Highlord Mastrogonde" (Searing Gorge)
-	[ 8283 ] = 2; -- "Slave Master Blackheart" (Searing Gorge)
-	[ 8296 ] = 2; -- "Mojo the Twisted" (Blasted Lands)
-	[ 8297 ] = 2; -- "Magronos the Unyielding" (Blasted Lands)
-	[ 8298 ] = 2; -- "Akubar the Seer" (Blasted Lands)
-	[ 8299 ] = 2; -- "Spiteflayer" (Blasted Lands)
-	[ 8300 ] = 2; -- "Ravage" (Blasted Lands)
-	[ 8301 ] = 2; -- "Clack the Reaver" (Blasted Lands)
-	[ 8302 ] = 2; -- "Deatheye" (Blasted Lands)
-	[ 8303 ] = 2; -- "Grunter" (Blasted Lands)
-	[ 8304 ] = 2; -- "Dreadscorn" (Blasted Lands)
-	[ 8503 ] = 2; -- "Gibblewilt" (Dun Morogh)
-	[ 8660 ] = 1; -- "The Evalcharr" (Azshara)
-	[ 8923 ] = "Blackrock Depths"; -- "Panzor the Invincible" (Blackrock Depths)
-	[ 8924 ] = "Blackrock Depths"; -- "The Behemoth" (Blackrock Depths)
-	[ 8976 ] = 2; -- "Hematos" (Burning Steppes)
-	[ 8978 ] = 2; -- "Thauris Balgarr" (Burning Steppes)
-	[ 8979 ] = 2; -- "Gruklash" (Burning Steppes)
-	[ 8981 ] = 2; -- "Malfunctioning Reaver" (Burning Steppes)
-	[ 9024 ] = "Blackrock Depths"; -- "Pyromancer Loregrain" (Blackrock Depths)
-	[ 9041 ] = "Blackrock Depths"; -- "Warder Stilgiss" (Blackrock Depths)
-	[ 9042 ] = "Blackrock Depths"; -- "Verek" (Blackrock Depths)
-	[ 9217 ] = "Blackrock Spire"; -- "Spirestone Lord Magus" (Blackrock Spire)
-	[ 9218 ] = "Blackrock Spire"; -- "Spirestone Battle Lord" (Blackrock Spire)
-	[ 9219 ] = "Blackrock Spire"; -- "Spirestone Butcher" (Blackrock Spire)
-	[ 9596 ] = "Blackrock Spire"; -- "Bannok Grimaxe" (Blackrock Spire)
-	[ 9602 ] = 2; -- "Hahk'Zor" (Burning Steppes)
-	[ 9604 ] = 2; -- "Gorgon'och" (Burning Steppes)
-	[ 9718 ] = "Blackrock Spire"; -- "Ghok Bashguud" (Blackrock Spire)
-	[ 10077 ] = 2; -- "Deathmaw" (Burning Steppes)
-	[ 10078 ] = 2; -- "Terrorspark" (Burning Steppes)
-	[ 10119 ] = 2; -- "Volchan" (Burning Steppes)
-	[ 10196 ] = 1; -- "General Colbatann" (Winterspring)
-	[ 10197 ] = 1; -- "Mezzir the Howler" (Winterspring)
-	[ 10198 ] = 1; -- "Kashoch the Reaver" (Winterspring)
-	[ 10199 ] = 1; -- "Grizzle Snowpaw" (Winterspring)
-	[ 10200 ] = 1; -- "Rak'shiri" (Winterspring)
-	[ 10201 ] = 1; -- "Lady Hederine" (Winterspring)
-	[ 10202 ] = 1; -- "Azurous" (Winterspring)
-	[ 10263 ] = "Blackrock Spire"; -- "Burning Felguard" (Blackrock Spire)
-	[ 10356 ] = 2; -- "Bayne" (Tirisfal Glades)
-	[ 10357 ] = 2; -- "Ressan the Needler" (Tirisfal Glades)
-	[ 10358 ] = 2; -- "Fellicent's Shade" (Tirisfal Glades)
-	[ 10359 ] = 2; -- "Sri'skulk" (Tirisfal Glades)
-	[ 10376 ] = "Blackrock Spire"; -- "Crystal Fang" (Blackrock Spire)
-	[ 10509 ] = "Blackrock Spire"; -- "Jed Runewatcher" (Blackrock Spire)
-	[ 10558 ] = "Stratholme"; -- "Hearthsinger Forresten" (Stratholme)
-	[ 10559 ] = 1; -- "Lady Vespia" (Ashenvale)
-	[ 10639 ] = 1; -- "Rorgish Jowl" (Ashenvale)
-	[ 10640 ] = 1; -- "Oakpaw" (Ashenvale)
-	[ 10641 ] = 1; -- "Branch Snapper" (Ashenvale)
-	[ 10642 ] = 1; -- "Eck'alom" (Ashenvale)
-	[ 10643 ] = 1; -- "Mugglefin" (Ashenvale)
-	[ 10644 ] = 1; -- "Mist Howler" (Ashenvale)
-	[ 10647 ] = 1; -- "Prince Raze" (Ashenvale)
-	[ 10817 ] = 2; -- "Duggan Wildhammer" (Eastern Plaguelands)
-	[ 10821 ] = 2; -- "Hed'mush the Rotting" (Eastern Plaguelands)
-	[ 10822 ] = 2; -- "Warlord Thresh'jin" (Eastern Plaguelands)
-	[ 10823 ] = 2; -- "Zul'Brin Warpbranch" (Eastern Plaguelands)
-	[ 10824 ] = 2; -- "Ranger Lord Hawkspear" (Eastern Plaguelands)
-	[ 10825 ] = 2; -- "Gish the Unmoving" (Eastern Plaguelands)
-	[ 10826 ] = 2; -- "Lord Darkscythe" (Eastern Plaguelands)
-	[ 10827 ] = 2; -- "Deathspeaker Selendre" (Eastern Plaguelands)
-	[ 10828 ] = 2; -- "High General Abbendis" (Eastern Plaguelands)
-	[ 10899 ] = "Blackrock Spire"; -- "Goraluk Anvilcrack" (Blackrock Spire)
-	[ 11383 ] = 2; -- "High Priestess Hai'watna" (Stranglethorn Vale)
-	[ 11447 ] = "Dire Maul"; -- "Mushgog" (Dire Maul)
-	[ 11497 ] = 1; -- "The Razza" (Feralas)
-	[ 11688 ] = "Maraudon"; -- "Cursed Centaur" (Maraudon)
-	[ 12037 ] = 1; -- "Ursol'lok" (Ashenvale)
-	[ 12431 ] = 2; -- "Gorefang" (Silverpine Forest)
-	[ 12432 ] = 2; -- "Old Vicejaw" (Silverpine Forest)
-	[ 12433 ] = 2; -- "Krethis Shadowspinner" (Silverpine Forest)
-	[ 13896 ] = 1; -- "Scalebeard" (Azshara)
-	[ 14221 ] = 2; -- "Gravis Slipknot" (Alterac Mountains)
-	[ 14222 ] = 2; -- "Araga" (Alterac Mountains)
-	[ 14223 ] = 2; -- "Cranky Benj" (Alterac Mountains)
-	[ 14224 ] = 2; -- "7:XT" (Badlands)
-	[ 14225 ] = 1; -- "Prince Kellen" (Desolace)
-	[ 14226 ] = 1; -- "Kaskk" (Desolace)
-	[ 14227 ] = 1; -- "Hissperak" (Desolace)
-	[ 14228 ] = 1; -- "Giggler" (Desolace)
-	[ 14229 ] = 1; -- "Accursed Slitherblade" (Desolace)
-	[ 14230 ] = 1; -- "Burgle Eye" (Dustwallow Marsh)
-	[ 14231 ] = 1; -- "Drogoth the Roamer" (Dustwallow Marsh)
-	[ 14232 ] = 1; -- "Dart" (Dustwallow Marsh)
-	[ 14233 ] = 1; -- "Ripscale" (Dustwallow Marsh)
-	[ 14234 ] = 1; -- "Hayoc" (Dustwallow Marsh)
-	[ 14235 ] = 1; -- "The Rot" (Dustwallow Marsh)
-	[ 14236 ] = 1; -- "Lord Angler" (Dustwallow Marsh)
-	[ 14237 ] = 1; -- "Oozeworm" (Dustwallow Marsh)
-	[ 14266 ] = 2; -- "Shanda the Spinner" (Loch Modan)
-	[ 14267 ] = 2; -- "Emogg the Crusher" (Loch Modan)
-	[ 14268 ] = 2; -- "Lord Condar" (Loch Modan)
-	[ 14269 ] = 2; -- "Seeker Aqualon" (Redridge Mountains)
-	[ 14270 ] = 2; -- "Squiddic" (Redridge Mountains)
-	[ 14271 ] = 2; -- "Ribchaser" (Redridge Mountains)
-	[ 14272 ] = 2; -- "Snarlflare" (Redridge Mountains)
-	[ 14273 ] = 2; -- "Boulderheart" (Redridge Mountains)
-	[ 14275 ] = 2; -- "Tamra Stormpike" (Hillsbrad Foothills)
-	[ 14276 ] = 2; -- "Scargil" (Hillsbrad Foothills)
-	[ 14277 ] = 2; -- "Lady Zephris" (Hillsbrad Foothills)
-	[ 14278 ] = 2; -- "Ro'Bark" (Hillsbrad Foothills)
-	[ 14279 ] = 2; -- "Creepthess" (Hillsbrad Foothills)
-	[ 14280 ] = 2; -- "Big Samras" (Hillsbrad Foothills)
-	[ 14281 ] = 2; -- "Jimmy the Bleeder" (Alterac Mountains)
-	[ 14339 ] = 1; -- "Death Howl" (Felwood)
-	[ 14340 ] = 1; -- "Alshirr Banebreath" (Felwood)
-	[ 14342 ] = 1; -- "Ragepaw" (Felwood)
-	[ 14343 ] = 1; -- "Olm the Wise" (Felwood)
-	[ 14344 ] = 1; -- "Mongress" (Felwood)
-	[ 14345 ] = 1; -- "The Ongar" (Felwood)
-	[ 14424 ] = 2; -- "Mirelow" (Wetlands)
-	[ 14425 ] = 2; -- "Gnawbone" (Wetlands)
-	[ 14426 ] = 1; -- "Harb Foulmountain" (Thousand Needles)
-	[ 14427 ] = 1; -- "Gibblesnik" (Thousand Needles)
-	[ 14428 ] = 1; -- "Uruson" (Teldrassil)
-	[ 14429 ] = 1; -- "Grimmaw" (Teldrassil)
-	[ 14430 ] = 1; -- "Duskstalker" (Teldrassil)
-	[ 14431 ] = 1; -- "Fury Shelda" (Teldrassil)
-	[ 14432 ] = 1; -- "Threggil" (Teldrassil)
-	[ 14433 ] = 2; -- "Sludginn" (Wetlands)
-	[ 14445 ] = 2; -- "Lord Captain Wyrmak" (Swamp of Sorrows)
-	[ 14446 ] = 2; -- "Fingat" (Swamp of Sorrows)
-	[ 14447 ] = 2; -- "Gilmorian" (Swamp of Sorrows)
-	[ 14448 ] = 2; -- "Molt Thorn" (Swamp of Sorrows)
-	[ 14471 ] = 1; -- "Setis" (Silithus)
-	[ 14472 ] = 1; -- "Gretheer" (Silithus)
-	[ 14473 ] = 1; -- "Lapress" (Silithus)
-	[ 14474 ] = 1; -- "Zora" (Silithus)
-	[ 14475 ] = 1; -- "Rex Ashil" (Silithus)
-	[ 14476 ] = 1; -- "Krellack" (Silithus)
-	[ 14477 ] = 1; -- "Grubthor" (Silithus)
-	[ 14478 ] = 1; -- "Huricanian" (Silithus)
-	[ 14479 ] = 1; -- "Twilight Lord Everun" (Silithus)
-	[ 14487 ] = 2; -- "Gluggle" (Stranglethorn Vale)
-	[ 14488 ] = 2; -- "Roloch" (Stranglethorn Vale)
-	[ 14490 ] = 2; -- "Rippa" (Stranglethorn Vale)
-	[ 14491 ] = 2; -- "Kurmokk" (Stranglethorn Vale)
-	[ 14492 ] = 2; -- "Verifonix" (Stranglethorn Vale)
-	[ 16179 ] = "Karazhan"; -- "Hyakiss the Lurker" (Karazhan)
-	[ 16180 ] = "Karazhan"; -- "Shadikith the Glider" (Karazhan)
-	[ 16181 ] = "Karazhan"; -- "Rokad the Ravager" (Karazhan)
-	[ 16184 ] = 2; -- "Nerubian Overseer" (Eastern Plaguelands)
-	[ 16854 ] = 2; -- "Eldinarcus" (Eversong Woods)
-	[ 16855 ] = 2; -- "Tregla" (Eversong Woods)
-	[ 17144 ] = 3; -- "Goretooth" (Nagrand)
-	[ 18241 ] = 1; -- "Crusty" (Desolace)
-	[ 18677 ] = 3; -- "Mekthorg the Wild" (Hellfire Peninsula)
-	[ 18678 ] = 3; -- "Fulgorge" (Hellfire Peninsula)
-	[ 18679 ] = 3; -- "Vorakem Doomspeaker" (Hellfire Peninsula)
-	[ 18680 ] = 3; -- "Marticar" (Zangarmarsh)
-	[ 18681 ] = 3; -- "Coilfang Emissary" (Zangarmarsh)
-	[ 18682 ] = 3; -- "Bog Lurker" (Zangarmarsh)
-	[ 18683 ] = 3; -- "Voidhunter Yar" (Nagrand)
-	[ 18684 ] = 3; -- "Bro'Gaz the Clanless" (Nagrand)
-	[ 18685 ] = 3; -- "Okrek" (Terokkar Forest)
-	[ 18686 ] = 3; -- "Doomsayer Jurim" (Terokkar Forest)
-	[ 18689 ] = 3; -- "Crippler" (Terokkar Forest)
-	[ 18690 ] = 3; -- "Morcrush" (Blade's Edge Mountains)
-	[ 18692 ] = 3; -- "Hemathion" (Blade's Edge Mountains)
-	[ 18693 ] = 3; -- "Speaker Mar'grom" (Blade's Edge Mountains)
-	[ 18694 ] = 3; -- "Collidus the Warp-Watcher" (Shadowmoon Valley)
-	[ 18695 ] = 3; -- "Ambassador Jerrikar" (Shadowmoon Valley)
-	[ 18696 ] = 3; -- "Kraator" (Shadowmoon Valley)
-	[ 18697 ] = 3; -- "Chief Engineer Lorthander" (Netherstorm)
-	[ 18698 ] = 3; -- "Ever-Core the Punisher" (Netherstorm)
-	[ 20932 ] = 3; -- "Nuramoc" (Netherstorm)
-	[ 22060 ] = 1; -- "Fenissa the Assassin" (Bloodmyst Isle)
-	[ 22062 ] = 2; -- "Dr. Whitherlimb" (Ghostlands)
-	[ 32357 ] = 4; -- "Old Crystalbark" (Borean Tundra)
-	[ 32358 ] = 4; -- "Fumblub Gearwind" (Borean Tundra)
-	[ 32361 ] = 4; -- "Icehorn" (Borean Tundra)
-	[ 32377 ] = 4; -- "Perobas the Bloodthirster" (Howling Fjord)
-	[ 32386 ] = 4; -- "Vigdis the War Maiden" (Howling Fjord)
-	[ 32398 ] = 4; -- "King Ping" (Howling Fjord)
-	[ 32400 ] = 4; -- "Tukemuth" (Dragonblight)
-	[ 32409 ] = 4; -- "Crazed Indu'le Survivor" (Dragonblight)
-	[ 32417 ] = 4; -- "Scarlet Highlord Daion" (Dragonblight)
-	[ 32422 ] = 4; -- "Grocklar" (Grizzly Hills)
-	[ 32429 ] = 4; -- "Seething Hate" (Grizzly Hills)
-	[ 32438 ] = 4; -- "Syreian the Bonecarver" (Grizzly Hills)
-	[ 32447 ] = 4; -- "Zul'drak Sentinel" (Zul'Drak)
-	[ 32471 ] = 4; -- "Griegen" (Zul'Drak)
-	[ 32475 ] = 4; -- "Terror Spinner" (Zul'Drak)
-	[ 32481 ] = 4; -- "Aotona" (Sholazar Basin)
-	[ 32485 ] = 4; -- "King Krush" (Sholazar Basin)
-	[ 32487 ] = 4; -- "Putridus the Ancient" (Icecrown)
-	[ 32491 ] = 4; -- "Time-Lost Proto Drake" (The Storm Peaks)
-	[ 32495 ] = 4; -- "Hildana Deathstealer" (Icecrown)
-	[ 32500 ] = 4; -- "Dirkee" (The Storm Peaks)
-	[ 32501 ] = 4; -- "High Thane Jorfus" (Icecrown)
-	[ 32517 ] = 4; -- "Loque'nahak" (Sholazar Basin)
-	[ 32630 ] = 4; -- "Vyragosa" (The Storm Peaks)
-	[ 33776 ] = 4; -- "Gondria" (Zul'Drak)
-	[ 35189 ] = 4; -- "Skoll" (The Storm Peaks)
-	[ 38453 ] = 4; -- "Arcturis" (Grizzly Hills)
+
+--- Rare NPC data imported from SilverDragon by Kemayo.
+-- WorldID is a continent ID (1 Kalimdor, 2 Eastern Kingdoms, 3 Outland, 4 Northrend)
+-- or an instance name, matching how _NPCScan restricts scans per world.
+-- Locations pack both coordinates into one number: floor( X * 10000 ) * 10000 + floor( Y * 10000 ).
+me.Rares = {
+	[ 61 ] = { Name = "Thuros Lightfingers"; WorldID = 2; Zone = "Elwynn Forest"; Level = 11; Type = "Humanoid"; Locations = { 29005820; 49008290; 49306010; 86207400; 88307920; }; };
+	[ 79 ] = { Name = "Narg the Taskmaster"; WorldID = 2; Zone = "Elwynn Forest"; Level = 10; Type = "Humanoid"; Locations = { 41007790; }; };
+	[ 99 ] = { Name = "Morgaine the Sly"; WorldID = 2; Zone = "Elwynn Forest"; Level = 10; Type = "Humanoid"; Locations = { 30806490; }; };
+	[ 100 ] = { Name = "Gruff Swiftbite"; WorldID = 2; Zone = "Elwynn Forest"; Level = 12; Type = "Humanoid"; Locations = { 24009490; 26208230; 26208830; }; };
+	[ 462 ] = { Name = "Vultros"; WorldID = 2; Zone = "Westfall"; Level = 26; Type = "Beast"; Locations = { 34906940; 44305990; 47104610; 48104100; 50202430; 50505660; 50805150; 51501800; 53204590; 55802320; 61607510; 64105760; }; };
+	[ 471 ] = { Name = "Mother Fang"; WorldID = 2; Zone = "Elwynn Forest"; Level = 10; Type = "Beast"; Locations = { 61004710; }; };
+	[ 472 ] = { Name = "Fedfennel"; WorldID = 2; Zone = "Elwynn Forest"; Level = 12; Type = "Humanoid"; Locations = { 65803930; 67404590; 71603880; }; };
+	[ 503 ] = { Name = "Lord Malathrom"; WorldID = 2; Zone = "Duskwood"; Level = 31; Type = "Undead"; Locations = { 21102730; }; };
+	[ 506 ] = { Name = "Sergeant Brashclaw"; WorldID = 2; Zone = "Westfall"; Level = 18; Type = "Humanoid"; Locations = { 35003130; 59807410; 65107500; }; };
+	[ 507 ] = { Name = "Fenros"; WorldID = 2; Zone = "Duskwood"; Level = 32; Type = "Humanoid"; Locations = { 57902870; 59703480; 60304080; 60905080; 62905790; 66205190; 66704590; }; };
+	[ 519 ] = { Name = "Slark"; WorldID = 2; Zone = "Westfall"; Level = 15; Type = "Humanoid"; Locations = { 26306170; 26504710; 27504090; 27606960; 28807860; 29103210; 31102680; 33608430; 34902070; 39401320; 47201060; 52201020; }; };
+	[ 520 ] = { Name = "Brack"; WorldID = 2; Zone = "Westfall"; Level = 19; Type = "Humanoid"; Locations = { 27705670; 27804140; 27907330; 30708100; 31702570; 37601790; 41001200; 48701090; 54501140; }; };
+	[ 521 ] = { Name = "Lupos"; WorldID = 2; Zone = "Duskwood"; Level = 23; Type = "Beast"; Locations = { 20702630; 25802880; 29103620; 32403010; 37502490; 37703000; 59302440; 64302780; 64801940; 69602490; }; };
+	[ 534 ] = { Name = "Nefaru"; WorldID = 2; Zone = "Duskwood"; Level = 34; Type = "Humanoid"; Locations = { 62208200; 73107500; }; };
+	[ 572 ] = { Name = "Leprithus"; WorldID = 2; Zone = "Westfall"; Level = 19; Type = "Undead"; Locations = { 1706620; 39902730; 41203280; 59907770; 63406520; }; };
+	[ 573 ] = { Name = "Foe Reaper 4000"; WorldID = 2; Zone = "Westfall"; Level = 20; Type = "Mechanical"; Locations = { 38205080; 44503570; 49902200; 51006770; 63006040; }; };
+	[ 574 ] = { Name = "Naraxis"; WorldID = 2; Zone = "Duskwood"; Level = 27; Type = "Beast"; Locations = { 86404740; }; };
+	[ 584 ] = { Name = "Kazon"; WorldID = 2; Zone = "Redridge Mountains"; Level = 27; Type = "Humanoid"; Locations = { 34900760; }; };
+	[ 616 ] = { Name = "Chatter"; WorldID = 2; Zone = "Redridge Mountains"; Level = 23; Type = "Beast"; Locations = { 51904500; }; };
+	[ 763 ] = { Name = "Lost One Chieftain"; WorldID = 2; Zone = "Swamp of Sorrows"; Level = 39; Type = "Humanoid"; Locations = { 53507780; 60102240; 63401720; }; };
+	[ 771 ] = { Name = "Commander Felstrom"; WorldID = 2; Zone = "Duskwood"; Level = 32; Type = "Undead"; Locations = { 13003370; 18203560; }; };
+	[ 947 ] = { Name = "Rohh the Silent"; WorldID = 2; Zone = "Redridge Mountains"; Level = 26; Type = "Humanoid"; Locations = { 74604080; 75703030; 79304930; 80105570; 86305770; }; };
+	[ 1037 ] = { Name = "Dragonmaw Battlemaster"; WorldID = 2; Zone = "Wetlands"; Level = 25; Type = "Humanoid"; Locations = { 43104360; 49604810; }; };
+	[ 1063 ] = { Name = "Jade"; WorldID = 2; Zone = "Swamp of Sorrows"; Level = 47; Type = "Dragonkin"; Locations = { 69805420; }; };
+	[ 1106 ] = { Name = "Lost One Cook"; WorldID = 2; Zone = "Swamp of Sorrows"; Level = 37; Type = "Humanoid"; Locations = { 62302340; }; };
+	[ 1112 ] = { Name = "Leech Widow"; WorldID = 2; Zone = "Wetlands"; Level = 24; Type = "Beast"; Locations = { 45706380; }; };
+	[ 1119 ] = { Name = "Hammerspine"; WorldID = 2; Zone = "Dun Morogh"; Level = 12; Type = "Humanoid"; Locations = { 71605160; }; };
+	[ 1130 ] = { Name = "Bjarn"; WorldID = 2; Zone = "Dun Morogh"; Level = 12; Type = "Beast"; Locations = { 53105860; 58706140; 63705820; }; };
+	[ 1132 ] = { Name = "Timber"; WorldID = 2; Zone = "Dun Morogh"; Level = 10; Type = "Beast"; Locations = { 32204340; 33603820; }; };
+	[ 1137 ] = { Name = "Edan the Howler"; WorldID = 2; Zone = "Dun Morogh"; Level = 9; Type = "Humanoid"; Locations = { 39004780; }; };
+	[ 1140 ] = { Name = "Razormaw Matriarch"; WorldID = 2; Zone = "Wetlands"; Level = 31; Type = "Beast"; Locations = { 67403020; 69103530; }; };
+	[ 1260 ] = { Name = "Great Father Arctikus"; WorldID = 2; Zone = "Dun Morogh"; Level = 11; Type = "Humanoid"; Locations = { 21105360; }; };
+	[ 1398 ] = { Name = "Boss Galgosh"; WorldID = 2; Zone = "Loch Modan"; Level = 22; Type = "Humanoid"; Locations = { 68406600; }; };
+	[ 1399 ] = { Name = "Magosh"; WorldID = 2; Zone = "Loch Modan"; Level = 21; Type = "Humanoid"; Locations = { 69906600; }; };
+	[ 1424 ] = { Name = "Master Digger"; WorldID = 2; Zone = "Westfall"; Level = 15; Type = "Humanoid"; Locations = { 45801800; }; };
+	[ 1425 ] = { Name = "Grizlak"; WorldID = 2; Zone = "Loch Modan"; Level = 15; Type = "Humanoid"; Locations = { 34902730; }; };
+	[ 1531 ] = { Name = "Lost Soul"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 7; Type = "Undead"; Locations = { 44204040; 49103530; 53104990; }; };
+	[ 1533 ] = { Name = "Tormented Spirit"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 9; Type = "Undead"; Locations = { 43703250; }; };
+	[ 1552 ] = { Name = "Scale Belly"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 45; Type = "Beast"; Locations = { 43504590; }; };
+	[ 1837 ] = { Name = "Scarlet Judge"; WorldID = 2; Zone = "Western Plaguelands"; Level = 60; Type = "Humanoid"; Locations = { 42401860; }; };
+	[ 1838 ] = { Name = "Scarlet Interrogator"; WorldID = 2; Zone = "Western Plaguelands"; Level = 61; Type = "Humanoid"; Elite = true; Locations = { 46601410; }; };
+	[ 1839 ] = { Name = "Scarlet High Clerist"; WorldID = 2; Zone = "Western Plaguelands"; Level = 63; Type = "Humanoid"; Elite = true; Locations = { 54902350; }; };
+	[ 1841 ] = { Name = "Scarlet Executioner"; WorldID = 2; Zone = "Western Plaguelands"; Level = 60; Type = "Humanoid"; Elite = true; Locations = { 45601840; }; };
+	[ 1843 ] = { Name = "Foreman Jerris"; WorldID = 2; Zone = "Western Plaguelands"; Level = 62; Type = "Humanoid"; Elite = true; Locations = { 45300980; 45901600; }; };
+	[ 1844 ] = { Name = "Foreman Marcrid"; WorldID = 2; Zone = "Western Plaguelands"; Level = 58; Type = "Humanoid"; Locations = { 43203500; 48503180; }; };
+	[ 1847 ] = { Name = "Foulmane"; WorldID = 2; Zone = "Western Plaguelands"; Level = 52; Type = "Undead"; Locations = { 45805110; }; };
+	[ 1848 ] = { Name = "Lord Maldazzar"; WorldID = 2; Zone = "Western Plaguelands"; Level = 56; Type = "Humanoid"; Locations = { 49407790; 54608030; }; };
+	[ 1850 ] = { Name = "Putridius"; WorldID = 2; Zone = "Western Plaguelands"; Level = 58; Type = "Undead"; Elite = true; Locations = { 45306240; 46406940; }; };
+	[ 1851 ] = { Name = "The Husk"; WorldID = 2; Zone = "Western Plaguelands"; Level = 62; Type = "Elemental"; Locations = { 61403720; }; };
+	[ 1885 ] = { Name = "Scarlet Smith"; WorldID = 2; Zone = "Western Plaguelands"; Level = 59; Type = "Humanoid"; Locations = { 44701300; }; };
+	[ 1910 ] = { Name = "Muad"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 10; Type = "Humanoid"; Locations = { 34504430; }; };
+	[ 1911 ] = { Name = "Deeb"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 12; Type = "Humanoid"; Locations = { 57302820; 62402900; }; };
+	[ 1920 ] = { Name = "Dalaran Spellscribe"; WorldID = 2; Zone = "Silverpine Forest"; Level = 21; Type = "Humanoid"; Locations = { 62806230; }; };
+	[ 1936 ] = { Name = "Farmer Solliden"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 8; Type = "Humanoid"; Locations = { 34205190; }; };
+	[ 1944 ] = { Name = "Rot Hide Bruiser"; WorldID = 2; Zone = "Silverpine Forest"; Level = 22; Type = "Undead"; Locations = { 64102380; }; };
+	[ 1948 ] = { Name = "Snarlmane"; WorldID = 2; Zone = "Silverpine Forest"; Level = 23; Type = "Undead"; Locations = { 65302500; }; };
+	[ 2090 ] = { Name = "Ma'ruk Wyrmscale"; WorldID = 2; Zone = "Wetlands"; Level = 23; Type = "Humanoid"; Locations = { 47807460; }; };
+	[ 2108 ] = { Name = "Garneg Charskull"; WorldID = 2; Zone = "Wetlands"; Level = 29; Type = "Humanoid"; Locations = { 38404620; }; };
+	[ 2172 ] = { Name = "Strider Clutchmother"; WorldID = 1; Zone = "Darkshore"; Level = 20; Type = "Beast"; Locations = { 35008720; 37709260; }; };
+	[ 2175 ] = { Name = "Shadowclaw"; WorldID = 1; Zone = "Darkshore"; Level = 13; Type = "Beast"; Locations = { 38903680; }; };
+	[ 2184 ] = { Name = "Lady Moongazer"; WorldID = 1; Zone = "Darkshore"; Level = 17; Type = "Undead"; Locations = { 25203900; 41605830; }; };
+	[ 2186 ] = { Name = "Carnivous the Breaker"; WorldID = 1; Zone = "Darkshore"; Level = 16; Type = "Humanoid"; Locations = { 39907860; 43008460; }; };
+	[ 2191 ] = { Name = "Licillin"; WorldID = 1; Zone = "Darkshore"; Level = 14; Type = "Demon"; Locations = { 44903610; }; };
+	[ 2192 ] = { Name = "Firecaller Radison"; WorldID = 1; Zone = "Darkshore"; Level = 19; Type = "Humanoid"; Locations = { 38308610; }; };
+	[ 2258 ] = { Name = "Stone Fury"; WorldID = 2; Zone = "Alterac Mountains"; Level = 37; Type = "Elemental"; Locations = { 62303710; 63705010; 65504410; 71004640; 76304670; 80403800; }; };
+	[ 2283 ] = { Name = "Ravenclaw Regent"; WorldID = 2; Zone = "Silverpine Forest"; Level = 22; Type = "Undead"; Locations = { 57406990; }; };
+	[ 2447 ] = { Name = "Narillasanz"; WorldID = 2; Zone = "Alterac Mountains"; Level = 44; Type = "Dragonkin"; Elite = true; Locations = { 23005110; 23808110; 24006110; 27704340; 28207070; 31003800; 33507010; 38707210; 41807770; 44603610; 46804770; 47504180; 48007660; 48102180; 49207040; 50505340; 52202760; 54306550; 56804760; 58403470; 62106410; 62705110; 64103940; 68404670; 73406510; 73805720; 75304700; 76805200; 78906030; 80204070; 80504680; 83705270; }; };
+	[ 2452 ] = { Name = "Skhowl"; WorldID = 2; Zone = "Alterac Mountains"; Level = 36; Type = "Humanoid"; Locations = { 29106060; 30105150; 36403770; 41406300; }; };
+	[ 2453 ] = { Name = "Lo'Grosh"; WorldID = 2; Zone = "Alterac Mountains"; Level = 39; Type = "Humanoid"; Locations = { 47603240; 51404740; }; };
+	[ 2476 ] = { Name = "Large Loch Crocolisk"; WorldID = 2; Zone = "Loch Modan"; Level = 22; Type = "Beast"; Locations = { 56602790; 57003500; 57404170; 62604360; }; };
+	[ 2541 ] = { Name = "Lord Sakrasis"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 45; Type = "Humanoid"; Locations = { 28706220; }; };
+	[ 2598 ] = { Name = "Darbel Montrose"; WorldID = 2; Zone = "Arathi Highlands"; Level = 39; Type = "Humanoid"; Elite = true; Locations = { 26206180; }; };
+	[ 2600 ] = { Name = "Singer"; WorldID = 2; Zone = "Arathi Highlands"; Level = 34; Type = "Humanoid"; Locations = { 31002590; 32503120; }; };
+	[ 2601 ] = { Name = "Foulbelly"; WorldID = 2; Zone = "Arathi Highlands"; Level = 42; Type = "Humanoid"; Elite = true; Locations = { 20106670; }; };
+	[ 2602 ] = { Name = "Ruul Onestone"; WorldID = 2; Zone = "Arathi Highlands"; Level = 39; Type = "Humanoid"; Elite = true; Locations = { 17706890; }; };
+	[ 2603 ] = { Name = "Kovork"; WorldID = 2; Zone = "Arathi Highlands"; Level = 36; Type = "Humanoid"; Locations = { 31404580; }; };
+	[ 2604 ] = { Name = "Molok the Crusher"; WorldID = 2; Zone = "Arathi Highlands"; Level = 39; Type = "Humanoid"; Locations = { 53408020; }; };
+	[ 2605 ] = { Name = "Zalas Witherbark"; WorldID = 2; Zone = "Arathi Highlands"; Level = 40; Type = "Humanoid"; Locations = { 66508220; }; };
+	[ 2606 ] = { Name = "Nimar the Slayer"; WorldID = 2; Zone = "Arathi Highlands"; Level = 37; Type = "Humanoid"; Locations = { 52604720; 60407400; 62506480; 68406430; 73606730; }; };
+	[ 2609 ] = { Name = "Geomancer Flintdagger"; WorldID = 2; Zone = "Arathi Highlands"; Level = 40; Type = "Humanoid"; Locations = { 82903260; }; };
+	[ 2744 ] = { Name = "Shadowforge Commander"; WorldID = 2; Zone = "Badlands"; Level = 40; Type = "Humanoid"; Locations = { 39702810; }; };
+	[ 2749 ] = { Name = "Siege Golem"; WorldID = 2; Zone = "Badlands"; Level = 40; Type = "Elemental"; Elite = true; Locations = { 6906060; 11906410; 17306110; 22705730; 27905810; 30105080; 34304430; 39404070; 52106530; }; };
+	[ 2751 ] = { Name = "War Golem"; WorldID = 2; Zone = "Badlands"; Level = 36; Type = "Elemental"; Locations = { 42502950; 44703480; 46201090; 50702470; 51402980; 52606360; }; };
+	[ 2752 ] = { Name = "Rumbler"; WorldID = 2; Zone = "Badlands"; Level = 45; Type = "Elemental"; Locations = { 2907980; 14508980; }; };
+	[ 2753 ] = { Name = "Barnabus"; WorldID = 2; Zone = "Badlands"; Level = 38; Type = "Beast"; Locations = { 35407300; 37006790; 44407340; 53207060; 55305700; }; };
+	[ 2754 ] = { Name = "Anathemus"; WorldID = 2; Zone = "Badlands"; Level = 45; Type = "Giant"; Elite = true; Locations = { 13207770; 13406900; 17906230; 19507900; 20505660; 25107310; 31707070; 36305640; 38607030; 42105370; 45607240; 48004690; 50707360; 54005270; 56406920; 57606370; }; };
+	[ 2779 ] = { Name = "Prince Nazjak"; WorldID = 2; Zone = "Arathi Highlands"; Level = 41; Type = "Humanoid"; Locations = { 20408400; 21008940; }; };
+	[ 2850 ] = { Name = "Broken Tooth"; WorldID = 2; Zone = "Badlands"; Level = 37; Type = "Beast"; Locations = { 43103800; 43303210; 48603390; 53001990; 53901480; 61103120; }; };
+	[ 2931 ] = { Name = "Zaricotl"; WorldID = 2; Zone = "Badlands"; Level = 55; Type = "Beast"; Elite = true; Locations = { 33205340; 33807090; 33906090; 36004610; 52407240; 54505920; 56706490; }; };
+	[ 3056 ] = { Name = "Ghost Howl"; WorldID = 1; Zone = "Mulgore"; Level = 12; Type = "Beast"; Locations = { 30202490; 32301990; 36404030; 37401630; 41504160; 47204090; 48801340; 49601890; }; };
+	[ 3068 ] = { Name = "Mazzranache"; WorldID = 1; Zone = "Mulgore"; Level = 9; Type = "Beast"; Locations = { 39104440; 44404240; 55904130; }; };
+	[ 3253 ] = { Name = "Silithid Harvester"; WorldID = 1; Zone = "The Barrens"; Level = 24; Locations = { 42207080; 47707060; }; };
+	[ 3270 ] = { Name = "Elder Mystic Razorsnout"; WorldID = 1; Zone = "The Barrens"; Level = 15; Type = "Humanoid"; Elite = true; Locations = { 58102670; }; };
+	[ 3295 ] = { Name = "Sludge Beast"; WorldID = 1; Zone = "The Barrens"; Level = 19; Locations = { 56300740; }; };
+	[ 3398 ] = { Name = "Gesharahan"; WorldID = 1; Zone = "The Barrens"; Level = 20; Elite = true; Locations = { 46403920; }; };
+	[ 3470 ] = { Name = "Rathorian"; WorldID = 1; Zone = "The Barrens"; Level = 15; Type = "Demon"; Locations = { 47901920; }; };
+	[ 3535 ] = { Name = "Blackmoss the Fetid"; WorldID = 1; Zone = "Teldrassil"; Level = 13; Type = "Elemental"; Locations = { 41303900; 41902820; }; };
+	[ 3581 ] = { Name = "Sewer Beast"; WorldID = 2; Zone = "Stormwind City"; Level = 50; Type = "Beast"; Locations = { 30303680; 43407270; 46905740; 56407460; 58404190; 66505130; 67906600; }; };
+	[ 3586 ] = { Name = "Miner Johnson"; WorldID = "The Deadmines"; Zone = "The Deadmines"; Level = 19; Type = "Humanoid"; Elite = true; };
+	[ 3652 ] = { Name = "Trigore the Lasher"; WorldID = "Wailing Caverns"; Zone = "Wailing Caverns"; Level = 17; Locations = { 48103340; 52505480; }; };
+	[ 3672 ] = { Name = "Boahn"; WorldID = "Wailing Caverns"; Zone = "Wailing Caverns"; Level = 17; Type = "Humanoid"; Locations = { 49103340; 52605510; }; };
+	[ 3735 ] = { Name = "Apothecary Falthis"; WorldID = 1; Zone = "Ashenvale"; Level = 22; Type = "Humanoid"; Locations = { 33102190; }; };
+	[ 3773 ] = { Name = "Akkrilus"; WorldID = 1; Zone = "Ashenvale"; Level = 26; Type = "Demon"; Locations = { 25206050; }; };
+	[ 3792 ] = { Name = "Terrowulf Packlord"; WorldID = 1; Zone = "Ashenvale"; Level = 32; Type = "Humanoid"; Locations = { 50303950; }; };
+	[ 3872 ] = { Name = "Deathsworn Captain"; WorldID = "Shadowfang Keep"; Zone = "Shadowfang Keep"; Level = 21; Type = "Undead"; Elite = true; };
+	[ 4015 ] = { Name = "Pridewing Patriarch"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 25; Type = "Beast"; Locations = { 44104040; 47204570; 52303810; }; };
+	[ 4030 ] = { Name = "Vengeful Ancient"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 30; Type = "Elemental"; Locations = { 28906820; 29907330; 31506240; 35207310; }; };
+	[ 4066 ] = { Name = "Nal'taszar"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 30; Type = "Dragonkin"; Locations = { 25501180; }; };
+	[ 4132 ] = { Name = "Silithid Ravager"; WorldID = 1; Zone = "Thousand Needles"; Level = 36; Type = "Beast"; Locations = { 63808610; 68908730; }; };
+	[ 4339 ] = { Name = "Brimgore"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 41; Type = "Dragonkin"; Elite = true; Locations = { 39407450; 43407950; }; };
+	[ 4380 ] = { Name = "Darkmist Widow"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 38; Type = "Beast"; Locations = { 31002040; }; };
+	[ 5343 ] = { Name = "Lady Szallah"; WorldID = 1; Zone = "Feralas"; Level = 46; Type = "Humanoid"; Locations = { 24907280; }; };
+	[ 5345 ] = { Name = "Diamond Head"; WorldID = 1; Zone = "Feralas"; Level = 45; Type = "Humanoid"; Locations = { 21305020; 22205810; 35005820; }; };
+	[ 5346 ] = { Name = "Bloodroar the Stalker"; WorldID = 1; Zone = "Feralas"; Level = 48; Type = "Humanoid"; Locations = { 52006080; }; };
+	[ 5347 ] = { Name = "Antilus the Soarer"; WorldID = 1; Zone = "Feralas"; Level = 48; Type = "Beast"; Locations = { 53006790; 54407400; }; };
+	[ 5349 ] = { Name = "Arash-ethis"; WorldID = 1; Zone = "Feralas"; Level = 49; Type = "Beast"; Locations = { 38302170; 44802270; }; };
+	[ 5350 ] = { Name = "Qirot"; WorldID = 1; Zone = "Feralas"; Level = 47; Locations = { 72106390; 78106260; }; };
+	[ 5352 ] = { Name = "Old Grizzlegut"; WorldID = 1; Zone = "Feralas"; Level = 43; Type = "Beast"; Locations = { 57205640; 61106180; 66404820; 69404290; }; };
+	[ 5354 ] = { Name = "Gnarl Leafbrother"; WorldID = 1; Zone = "Feralas"; Level = 44; Type = "Elemental"; Locations = { 67605720; 73205830; }; };
+	[ 5356 ] = { Name = "Snarler"; WorldID = 1; Zone = "Feralas"; Level = 42; Type = "Beast"; Locations = { 75803740; 81403940; }; };
+	[ 5399 ] = { Name = "Veyzhak the Cannibal"; WorldID = "Sunken Temple"; Zone = "Sunken Temple"; Level = 48; Type = "Humanoid"; Locations = { 54507910; }; };
+	[ 5400 ] = { Name = "Zekkis"; WorldID = "Sunken Temple"; Zone = "Sunken Temple"; Level = 48; Type = "Undead"; Locations = { 54407880; }; };
+	[ 5785 ] = { Name = "Sister Hatelash"; WorldID = 1; Zone = "Mulgore"; Level = 11; Type = "Humanoid"; Elite = true; Locations = { 29902090; 36101100; 53201160; }; };
+	[ 5786 ] = { Name = "Snagglespear"; WorldID = 1; Zone = "Mulgore"; Level = 9; Type = "Humanoid"; Locations = { 47607160; 53307310; }; };
+	[ 5787 ] = { Name = "Enforcer Emilgund"; WorldID = 1; Zone = "Mulgore"; Level = 11; Type = "Humanoid"; Locations = { 40301590; }; };
+	[ 5797 ] = { Name = "Aean Swiftriver"; WorldID = 1; Zone = "The Barrens"; Level = 22; Type = "Humanoid"; Elite = true; Locations = { 45106350; 45904720; 46007080; 47107590; 48605770; 49005260; }; };
+	[ 5798 ] = { Name = "Thora Feathermoon"; WorldID = 1; Zone = "The Barrens"; Level = 25; Type = "Humanoid"; Elite = true; Locations = { 44404200; 45106390; 46107020; 46304860; 46707940; 48605710; 49704280; 51806370; }; };
+	[ 5799 ] = { Name = "Hannah Bladeleaf"; WorldID = 1; Zone = "The Barrens"; Level = 24; Type = "Humanoid"; Elite = true; Locations = { 44704310; 45006400; 46106930; 46204810; 46407560; 47908100; 48005710; 51906520; }; };
+	[ 5800 ] = { Name = "Marcus Bel"; WorldID = 1; Zone = "The Barrens"; Level = 22; Type = "Humanoid"; Elite = true; Locations = { 45004150; 45006460; 46006970; 46407550; 47008060; 47805130; 48605790; 51906520; }; };
+	[ 5807 ] = { Name = "The Rake"; WorldID = 1; Zone = "Mulgore"; Level = 10; Type = "Beast"; Locations = { 48501690; 50702290; }; };
+	[ 5808 ] = { Name = "Warlord Kolkanis"; WorldID = 1; Zone = "Durotar"; Level = 9; Type = "Humanoid"; Locations = { 46307910; }; };
+	[ 5809 ] = { Name = "Watch Commander Zalaphil"; WorldID = 1; Zone = "Durotar"; Level = 9; Type = "Humanoid"; Locations = { 59205800; }; };
+	[ 5822 ] = { Name = "Felweaver Scornn"; WorldID = 1; Zone = "Durotar"; Level = 11; Type = "Humanoid"; Elite = true; Locations = { 51500940; }; };
+	[ 5823 ] = { Name = "Death Flayer"; WorldID = 1; Zone = "Durotar"; Level = 11; Type = "Beast"; Locations = { 35305100; 36305600; }; };
+	[ 5824 ] = { Name = "Captain Flat Tusk"; WorldID = 1; Zone = "Durotar"; Level = 11; Type = "Humanoid"; Elite = true; Locations = { 38805430; 42703910; 44404970; }; };
+	[ 5826 ] = { Name = "Geolord Mottle"; WorldID = 1; Zone = "Durotar"; Level = 9; Type = "Humanoid"; Locations = { 43203940; 43605070; }; };
+	[ 5827 ] = { Name = "Brontus"; WorldID = 1; Zone = "The Barrens"; Level = 27; Type = "Beast"; Elite = true; Locations = { 44307980; 44507430; 46606740; 48406100; }; };
+	[ 5828 ] = { Name = "Humar the Pridelord"; WorldID = 1; Zone = "The Barrens"; Level = 23; Type = "Beast"; Elite = true; Locations = { 61903360; }; };
+	[ 5829 ] = { Name = "Snort the Heckler"; WorldID = 1; Zone = "The Barrens"; Level = 17; Type = "Beast"; Locations = { 40402320; 41302850; }; };
+	[ 5830 ] = { Name = "Sister Rathtalon"; WorldID = 1; Zone = "The Barrens"; Level = 19; Type = "Humanoid"; Elite = true; Locations = { 39001490; }; };
+	[ 5831 ] = { Name = "Swiftmane"; WorldID = 1; Zone = "The Barrens"; Level = 21; Type = "Beast"; Elite = true; Locations = { 59903140; }; };
+	[ 5832 ] = { Name = "Thunderstomp"; WorldID = 1; Zone = "The Barrens"; Level = 24; Type = "Beast"; Locations = { 46807860; }; };
+	[ 5834 ] = { Name = "Azzere the Skyblade"; WorldID = 1; Zone = "The Barrens"; Level = 25; Type = "Beast"; Locations = { 44106110; 51906280; }; };
+	[ 5835 ] = { Name = "Foreman Grills"; WorldID = 1; Zone = "The Barrens"; Level = 18; Type = "Humanoid"; Locations = { 56300820; }; };
+	[ 5836 ] = { Name = "Engineer Whirleygig"; WorldID = 1; Zone = "The Barrens"; Level = 19; Type = "Humanoid"; Locations = { 56300870; }; };
+	[ 5837 ] = { Name = "Stonearm"; WorldID = 1; Zone = "The Barrens"; Level = 15; Type = "Humanoid"; Locations = { 42102470; }; };
+	[ 5838 ] = { Name = "Brokespear"; WorldID = 1; Zone = "The Barrens"; Level = 17; Type = "Humanoid"; Locations = { 53004440; }; };
+	[ 5841 ] = { Name = "Rocklance"; WorldID = 1; Zone = "The Barrens"; Level = 17; Type = "Humanoid"; Elite = true; Locations = { 52904320; }; };
+	[ 5842 ] = { Name = "Takk the Leaper"; WorldID = 1; Zone = "The Barrens"; Level = 19; Type = "Beast"; Elite = true; Locations = { 58300750; 60701350; }; };
+	[ 5847 ] = { Name = "Heggin Stonewhisker"; WorldID = 1; Zone = "The Barrens"; Level = 24; Type = "Humanoid"; Locations = { 47008380; }; };
+	[ 5848 ] = { Name = "Malgin Barleybrew"; WorldID = 1; Zone = "The Barrens"; Level = 25; Type = "Humanoid"; Locations = { 49408440; }; };
+	[ 5849 ] = { Name = "Digger Flameforge"; WorldID = 1; Zone = "The Barrens"; Level = 24; Type = "Humanoid"; Locations = { 47408540; }; };
+	[ 5851 ] = { Name = "Captain Gerogg Hammertoe"; WorldID = 1; Zone = "The Barrens"; Level = 27; Type = "Humanoid"; Elite = true; Locations = { 49608380; }; };
+	[ 5859 ] = { Name = "Hagg Taurenbane"; WorldID = 1; Zone = "The Barrens"; Level = 26; Type = "Humanoid"; Elite = true; Locations = { 41607880; }; };
+	[ 5863 ] = { Name = "Geopriest Gukk'rok"; WorldID = 1; Zone = "The Barrens"; Level = 19; Type = "Humanoid"; Locations = { 40804550; 43105250; }; };
+	[ 5864 ] = { Name = "Swinegart Spearhide"; WorldID = 1; Zone = "The Barrens"; Level = 22; Type = "Humanoid"; Elite = true; Locations = { 40804520; }; };
+	[ 5865 ] = { Name = "Dishu"; WorldID = 1; Zone = "The Barrens"; Level = 13; Type = "Beast"; Locations = { 49402710; 49601570; }; };
+	[ 5915 ] = { Name = "Brother Ravenoak"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 29; Type = "Humanoid"; Elite = true; Locations = { 28301210; }; };
+	[ 5916 ] = { Name = "Sentinel Amarassan"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 27; Type = "Humanoid"; Elite = true; Locations = { 29501560; 34601800; }; };
+	[ 5928 ] = { Name = "Sorrow Wing"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 27; Type = "Beast"; Locations = { 16007700; 46103750; 46903240; 51903470; }; };
+	[ 5930 ] = { Name = "Sister Riven"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 28; Type = "Humanoid"; Elite = true; Locations = { 26307060; 36406850; }; };
+	[ 5931 ] = { Name = "Foreman Rigger"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 24; Type = "Humanoid"; Elite = true; Locations = { 65105150; 66304540; }; };
+	[ 5932 ] = { Name = "Taskmaster Whipfang"; WorldID = 1; Zone = "Stonetalon Mountains"; Level = 22; Type = "Humanoid"; Elite = true; Locations = { 61705040; 62705560; }; };
+	[ 5933 ] = { Name = "Achellios the Banished"; WorldID = 1; Zone = "Thousand Needles"; Level = 31; Type = "Humanoid"; Locations = { 19403910; 21303210; 25903880; }; };
+	[ 5934 ] = { Name = "Heartrazor"; WorldID = 1; Zone = "Thousand Needles"; Level = 32; Type = "Beast"; Elite = true; Locations = { 14304000; }; };
+	[ 5935 ] = { Name = "Ironeye the Invincible"; WorldID = 1; Zone = "Thousand Needles"; Level = 37; Type = "Beast"; Elite = true; Locations = { 59100710; 85008010; 86107190; }; };
+	[ 5937 ] = { Name = "Vile Sting"; WorldID = 1; Zone = "Thousand Needles"; Level = 35; Type = "Beast"; Elite = true; Locations = { 69306660; 70107480; }; };
+	[ 6118 ] = { Name = "Varo'then's Ghost"; WorldID = 1; Zone = "Azshara"; Level = 48; Type = "Undead"; Locations = { 13607270; 16806720; }; };
+	[ 6581 ] = { Name = "Ravasaur Matriarch"; WorldID = 1; Zone = "Un'Goro Crater"; Level = 50; Type = "Beast"; Locations = { 61007160; 62006600; }; };
+	[ 6582 ] = { Name = "Clutchmother Zavas"; WorldID = 1; Zone = "Un'Goro Crater"; Level = 54; Type = "Beast"; Locations = { 44008140; }; };
+	[ 6583 ] = { Name = "Gruff"; WorldID = 1; Zone = "Un'Goro Crater"; Level = 57; Type = "Beast"; Elite = true; Locations = { 31007260; 31007890; 35306540; 37207660; }; };
+	[ 6584 ] = { Name = "King Mosh"; WorldID = 1; Zone = "Un'Goro Crater"; Level = 60; Type = "Beast"; Elite = true; Locations = { 27103670; 27804540; 30103120; 32203790; 35702720; 36403270; }; };
+	[ 6585 ] = { Name = "Uhk'loc"; WorldID = 1; Zone = "Un'Goro Crater"; Level = 53; Type = "Beast"; Locations = { 35807990; 68401290; }; };
+	[ 6646 ] = { Name = "Monnos the Elder"; WorldID = 1; Zone = "Azshara"; Level = 54; Type = "Giant"; Elite = true; Locations = { 54508010; 56008660; 71002220; 76002070; 81301830; }; };
+	[ 6647 ] = { Name = "Magister Hawkhelm"; WorldID = 1; Zone = "Azshara"; Level = 52; Type = "Humanoid"; Locations = { 56702840; }; };
+	[ 6648 ] = { Name = "Antilos"; WorldID = 1; Zone = "Azshara"; Level = 50; Type = "Beast"; Locations = { 16104950; 17206020; 17605460; 47702000; 49302580; 51503230; 54502410; 56101830; }; };
+	[ 6649 ] = { Name = "Lady Sesspira"; WorldID = 1; Zone = "Azshara"; Level = 51; Type = "Humanoid"; Locations = { 34105840; 36904920; }; };
+	[ 6650 ] = { Name = "General Fangferror"; WorldID = 1; Zone = "Azshara"; Level = 51; Type = "Humanoid"; Locations = { 40305280; }; };
+	[ 6651 ] = { Name = "Gatekeeper Rageroar"; WorldID = 1; Zone = "Azshara"; Level = 50; Type = "Humanoid"; Locations = { 38303230; }; };
+	[ 6652 ] = { Name = "Master Feardred"; WorldID = 1; Zone = "Azshara"; Level = 52; Type = "Demon"; Locations = { 61802570; 65701770; }; };
+	[ 7015 ] = { Name = "Flagglemurk the Cruel"; WorldID = 1; Zone = "Darkshore"; Level = 16; Type = "Humanoid"; Locations = { 35907150; 36706250; 44102120; }; };
+	[ 7016 ] = { Name = "Lady Vespira"; WorldID = 1; Zone = "Darkshore"; Level = 22; Type = "Humanoid"; Locations = { 57902150; 59901570; }; };
+	[ 7017 ] = { Name = "Lord Sinslayer"; WorldID = 1; Zone = "Darkshore"; Level = 16; Type = "Humanoid"; Locations = { 54803660; }; };
+	[ 7057 ] = { Name = "Digmaster Shovelphlange"; WorldID = "Uldaman"; Zone = "Uldaman"; Level = 38; Type = "Humanoid"; Elite = true; Locations = { 52206380; }; };
+	[ 7104 ] = { Name = "Dessecus"; WorldID = 1; Zone = "Felwood"; Level = 56; Type = "Elemental"; Elite = true; Locations = { 58301780; }; };
+	[ 7137 ] = { Name = "Immolatus"; WorldID = 1; Zone = "Felwood"; Level = 56; Type = "Demon"; Elite = true; Locations = { 39904450; 40303700; 45404010; }; };
+	[ 7895 ] = { Name = "Ambassador Bloodrage"; WorldID = 1; Zone = "The Barrens"; Level = 35; Type = "Undead"; Locations = { 45908780; 48609560; }; };
+	[ 8199 ] = { Name = "Warleader Krazzilak"; WorldID = 1; Zone = "Tanaris"; Level = 45; Type = "Humanoid"; Elite = true; Locations = { 36802470; 42402310; }; };
+	[ 8200 ] = { Name = "Jin'Zallah the Sandbringer"; WorldID = 1; Zone = "Tanaris"; Level = 46; Type = "Humanoid"; Elite = true; Locations = { 37002520; 42102270; }; };
+	[ 8201 ] = { Name = "Omgorn the Lost"; WorldID = 1; Zone = "Tanaris"; Level = 50; Type = "Humanoid"; Locations = { 37305630; 38907340; 39305100; 42805650; 44606500; }; };
+	[ 8202 ] = { Name = "Cyclok the Mad"; WorldID = 1; Zone = "Tanaris"; Level = 48; Type = "Humanoid"; Locations = { 38905340; 40407240; 45306580; }; };
+	[ 8203 ] = { Name = "Kregg Keelhaul"; WorldID = 1; Zone = "Tanaris"; Level = 47; Type = "Humanoid"; Locations = { 72404640; }; };
+	[ 8204 ] = { Name = "Soriid the Devourer"; WorldID = 1; Zone = "Tanaris"; Level = 50; Type = "Beast"; Locations = { 31004570; 34303990; }; };
+	[ 8205 ] = { Name = "Haarka the Ravenous"; WorldID = 1; Zone = "Tanaris"; Level = 50; Type = "Beast"; Locations = { 53407020; }; };
+	[ 8207 ] = { Name = "Greater Firebird"; WorldID = 1; Zone = "Tanaris"; Level = 46; Type = "Beast"; Locations = { 46203340; }; };
+	[ 8208 ] = { Name = "Murderous Blisterpaw"; WorldID = 1; Zone = "Tanaris"; Level = 43; Type = "Beast"; Locations = { 46202450; 47902990; 52903270; }; };
+	[ 8210 ] = { Name = "Razortalon"; WorldID = 2; Zone = "The Hinterlands"; Level = 44; Type = "Humanoid"; Locations = { 26805500; 26806510; 35305210; 37204460; }; };
+	[ 8211 ] = { Name = "Old Cliff Jumper"; WorldID = 2; Zone = "The Hinterlands"; Level = 42; Type = "Beast"; Locations = { 17205440; 19404940; }; };
+	[ 8212 ] = { Name = "The Reak"; WorldID = 2; Zone = "The Hinterlands"; Level = 49; Locations = { 45803970; 47905330; 49204720; 57204270; }; };
+	[ 8213 ] = { Name = "Ironback"; WorldID = 2; Zone = "The Hinterlands"; Level = 51; Type = "Beast"; Locations = { 73509180; 75008600; 77006240; 81804850; }; };
+	[ 8214 ] = { Name = "Jalinde Summerdrake"; WorldID = 2; Zone = "The Hinterlands"; Level = 49; Type = "Humanoid"; Locations = { 27804410; 31004930; }; };
+	[ 8215 ] = { Name = "Grimungous"; WorldID = 2; Zone = "The Hinterlands"; Level = 50; Type = "Giant"; Elite = true; Locations = { 63904760; 64905450; 69306050; 70305260; 75504940; 75805500; }; };
+	[ 8216 ] = { Name = "Retherokk the Berserker"; WorldID = 2; Zone = "The Hinterlands"; Level = 48; Type = "Humanoid"; Locations = { 45806940; 50306370; }; };
+	[ 8217 ] = { Name = "Mith'rethis the Enchanter"; WorldID = 2; Zone = "The Hinterlands"; Level = 52; Type = "Humanoid"; Elite = true; Locations = { 57106830; 57807520; 60908300; 66108040; }; };
+	[ 8218 ] = { Name = "Witherheart the Stalker"; WorldID = 2; Zone = "The Hinterlands"; Level = 45; Type = "Humanoid"; Locations = { 31907270; }; };
+	[ 8219 ] = { Name = "Zul'arek Hatefowler"; WorldID = 2; Zone = "The Hinterlands"; Level = 43; Type = "Humanoid"; Locations = { 23405770; 32005760; }; };
+	[ 8277 ] = { Name = "Rekk'tilac"; WorldID = 2; Zone = "Searing Gorge"; Level = 48; Type = "Beast"; Locations = { 29707290; 35002520; 48806760; 57702640; 61307360; 70307620; }; };
+	[ 8278 ] = { Name = "Smoldar"; WorldID = 2; Zone = "Searing Gorge"; Level = 50; Type = "Elemental"; Locations = { 27904800; 28606260; 29705450; 32104200; 37403990; 37603260; 42803440; 43003950; }; };
+	[ 8279 ] = { Name = "Faulty War Golem"; WorldID = 2; Zone = "Searing Gorge"; Level = 46; Type = "Elemental"; Locations = { 31106090; 32004720; 32205250; 33306600; 38700470; 43204140; 44707120; 47406610; 57805340; 58005880; }; };
+	[ 8280 ] = { Name = "Shleipnarr"; WorldID = 2; Zone = "Searing Gorge"; Level = 47; Type = "Demon"; Locations = { 54505860; 65603780; }; };
+	[ 8281 ] = { Name = "Scald"; WorldID = 2; Zone = "Searing Gorge"; Level = 49; Type = "Elemental"; Locations = { 36005600; 45404810; 50804770; 56504630; 59704120; }; };
+	[ 8282 ] = { Name = "Highlord Mastrogonde"; WorldID = 2; Zone = "Searing Gorge"; Level = 51; Type = "Humanoid"; Elite = true; Locations = { 14503790; 29902640; }; };
+	[ 8283 ] = { Name = "Slave Master Blackheart"; WorldID = 2; Zone = "Searing Gorge"; Level = 50; Type = "Humanoid"; Locations = { 40703580; 41002440; 41204460; }; };
+	[ 8296 ] = { Name = "Mojo the Twisted"; WorldID = 2; Zone = "Blasted Lands"; Level = 48; Type = "Humanoid"; Locations = { 41601200; }; };
+	[ 8297 ] = { Name = "Magronos the Unyielding"; WorldID = 2; Zone = "Blasted Lands"; Level = 56; Type = "Humanoid"; Locations = { 47104370; }; };
+	[ 8298 ] = { Name = "Akubar the Seer"; WorldID = 2; Zone = "Blasted Lands"; Level = 54; Type = "Humanoid"; Locations = { 45304860; 50405240; 58404540; }; };
+	[ 8299 ] = { Name = "Spiteflayer"; WorldID = 2; Zone = "Blasted Lands"; Level = 52; Type = "Beast"; Locations = { 58904340; }; };
+	[ 8300 ] = { Name = "Ravage"; WorldID = 2; Zone = "Blasted Lands"; Level = 51; Type = "Beast"; Locations = { 46703600; 57903320; 60603890; }; };
+	[ 8301 ] = { Name = "Clack the Reaver"; WorldID = 2; Zone = "Blasted Lands"; Level = 53; Type = "Beast"; Locations = { 49803780; 55303630; }; };
+	[ 8302 ] = { Name = "Deatheye"; WorldID = 2; Zone = "Blasted Lands"; Level = 49; Type = "Beast"; Locations = { 44302530; 47001860; }; };
+	[ 8303 ] = { Name = "Grunter"; WorldID = 2; Zone = "Blasted Lands"; Level = 50; Type = "Beast"; Locations = { 54203470; 56402930; 56501670; 61502710; }; };
+	[ 8304 ] = { Name = "Dreadscorn"; WorldID = 2; Zone = "Blasted Lands"; Level = 57; Type = "Humanoid"; Locations = { 39103380; 41903940; }; };
+	[ 8503 ] = { Name = "Gibblewilt"; WorldID = 2; Zone = "Dun Morogh"; Level = 11; Type = "Humanoid"; Locations = { 24204330; 26303660; }; };
+	[ 8660 ] = { Name = "The Evalcharr"; WorldID = 1; Zone = "Azshara"; Level = 48; Type = "Beast"; Locations = { 17205340; 17806470; 22905510; }; };
+	[ 8923 ] = { Name = "Panzor the Invincible"; WorldID = "Blackrock Depths"; Zone = "Blackrock Depths"; Level = 56; Type = "Elemental"; Elite = true; };
+	[ 8924 ] = { Name = "The Behemoth"; WorldID = "Blackrock Depths"; Zone = "Blackrock Depths"; Level = 50; Type = "Humanoid"; };
+	[ 8976 ] = { Name = "Hematos"; WorldID = 2; Zone = "Burning Steppes"; Level = 60; Type = "Dragonkin"; Elite = true; Locations = { 16705460; 18204730; 20005970; 23405030; 26306120; 29005220; 31905790; }; };
+	[ 8978 ] = { Name = "Thauris Balgarr"; WorldID = 2; Zone = "Burning Steppes"; Level = 57; Type = "Humanoid"; Locations = { 52504080; 54103450; 60203450; 65404420; 70203520; }; };
+	[ 8979 ] = { Name = "Gruklash"; WorldID = 2; Zone = "Burning Steppes"; Level = 59; Type = "Humanoid"; Locations = { 14403310; 39405540; 39803580; 43205020; }; };
+	[ 8981 ] = { Name = "Malfunctioning Reaver"; WorldID = 2; Zone = "Burning Steppes"; Level = 56; Type = "Elemental"; Locations = { 78202940; 83203130; 84205740; 88004720; 89103180; }; };
+	[ 9024 ] = { Name = "Pyromancer Loregrain"; WorldID = "Blackrock Depths"; Zone = "Blackrock Depths"; Level = 52; Type = "Humanoid"; Elite = true; };
+	[ 9041 ] = { Name = "Warder Stilgiss"; WorldID = "Blackrock Depths"; Zone = "Blackrock Depths"; Level = 54; Type = "Humanoid"; Elite = true; };
+	[ 9042 ] = { Name = "Verek"; WorldID = "Blackrock Depths"; Zone = "Blackrock Depths"; Level = 53; Type = "Demon"; Elite = true; };
+	[ 9217 ] = { Name = "Spirestone Lord Magus"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 58; Type = "Humanoid"; Elite = true; };
+	[ 9218 ] = { Name = "Spirestone Battle Lord"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 58; Type = "Humanoid"; Elite = true; };
+	[ 9219 ] = { Name = "Spirestone Butcher"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 57; Type = "Humanoid"; Elite = true; };
+	[ 9596 ] = { Name = "Bannok Grimaxe"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 59; Type = "Humanoid"; Elite = true; };
+	[ 9602 ] = { Name = "Hahk'Zor"; WorldID = 2; Zone = "Burning Steppes"; Level = 54; Type = "Humanoid"; Locations = { 79004430; }; };
+	[ 9604 ] = { Name = "Gorgon'och"; WorldID = 2; Zone = "Burning Steppes"; Level = 54; Type = "Humanoid"; Locations = { 77404670; }; };
+	[ 9718 ] = { Name = "Ghok Bashguud"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 59; Type = "Humanoid"; Elite = true; };
+	[ 10077 ] = { Name = "Deathmaw"; WorldID = 2; Zone = "Burning Steppes"; Level = 53; Type = "Beast"; Locations = { 74903330; 80105720; 82403130; 86405120; }; };
+	[ 10078 ] = { Name = "Terrorspark"; WorldID = 2; Zone = "Burning Steppes"; Level = 55; Type = "Demon"; Locations = { 41804630; 47904330; 63303800; 69003200; }; };
+	[ 10119 ] = { Name = "Volchan"; WorldID = 2; Zone = "Burning Steppes"; Level = 60; Type = "Giant"; Elite = true; Locations = { 72105600; 72905100; 74003790; 74104420; 78103160; 78205960; 84103060; 86705900; 89704800; 90704210; 92003480; }; };
+	[ 10196 ] = { Name = "General Colbatann"; WorldID = 1; Zone = "Winterspring"; Level = 57; Type = "Dragonkin"; Elite = true; Locations = { 54605120; 59704820; }; };
+	[ 10197 ] = { Name = "Mezzir the Howler"; WorldID = 1; Zone = "Winterspring"; Level = 55; Type = "Humanoid"; Locations = { 30303840; 30404610; 39703730; 45103750; }; };
+	[ 10198 ] = { Name = "Kashoch the Reaver"; WorldID = 1; Zone = "Winterspring"; Level = 60; Type = "Giant"; Elite = true; Locations = { 63307000; }; };
+	[ 10199 ] = { Name = "Grizzle Snowpaw"; WorldID = 1; Zone = "Winterspring"; Level = 59; Type = "Humanoid"; Locations = { 66403460; }; };
+	[ 10200 ] = { Name = "Rak'shiri"; WorldID = 1; Zone = "Winterspring"; Level = 57; Type = "Beast"; Locations = { 49000790; 49301550; 54401510; }; };
+	[ 10201 ] = { Name = "Lady Hederine"; WorldID = 1; Zone = "Winterspring"; Level = 61; Type = "Demon"; Elite = true; Locations = { 51808440; 64908030; }; };
+	[ 10202 ] = { Name = "Azurous"; WorldID = 1; Zone = "Winterspring"; Level = 59; Type = "Dragonkin"; Elite = true; Locations = { 55004770; 61004080; 66405310; 66604630; }; };
+	[ 10263 ] = { Name = "Burning Felguard"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 57; Type = "Demon"; Elite = true; };
+	[ 10356 ] = { Name = "Bayne"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 10; Type = "Demon"; Locations = { 39404260; 40205300; 45305190; 50405110; 56104190; }; };
+	[ 10357 ] = { Name = "Ressan the Needler"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 11; Type = "Beast"; Locations = { 42006750; 48006500; 53106330; }; };
+	[ 10358 ] = { Name = "Fellicent's Shade"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 12; Type = "Undead"; Locations = { 75006210; }; };
+	[ 10359 ] = { Name = "Sri'skulk"; WorldID = 2; Zone = "Tirisfal Glades"; Level = 13; Type = "Beast"; Locations = { 83405520; 84204970; 89205030; 89304100; }; };
+	[ 10376 ] = { Name = "Crystal Fang"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 60; Type = "Beast"; Elite = true; };
+	[ 10509 ] = { Name = "Jed Runewatcher"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 59; Type = "Humanoid"; Elite = true; };
+	[ 10558 ] = { Name = "Hearthsinger Forresten"; WorldID = "Stratholme"; Zone = "Stratholme"; Level = 57; Type = "Undead"; Elite = true; };
+	[ 10559 ] = { Name = "Lady Vespia"; WorldID = 1; Zone = "Ashenvale"; Level = 22; Type = "Humanoid"; Locations = { 9101530; 11102940; }; };
+	[ 10639 ] = { Name = "Rorgish Jowl"; WorldID = 1; Zone = "Ashenvale"; Level = 25; Type = "Humanoid"; Locations = { 35403270; }; };
+	[ 10640 ] = { Name = "Oakpaw"; WorldID = 1; Zone = "Ashenvale"; Level = 27; Type = "Humanoid"; Locations = { 49306070; 54506200; }; };
+	[ 10641 ] = { Name = "Branch Snapper"; WorldID = 1; Zone = "Ashenvale"; Level = 25; Type = "Elemental"; Locations = { 44904560; }; };
+	[ 10642 ] = { Name = "Eck'alom"; WorldID = 1; Zone = "Ashenvale"; Level = 27; Type = "Elemental"; Locations = { 45107160; 52306910; }; };
+	[ 10643 ] = { Name = "Mugglefin"; WorldID = 1; Zone = "Ashenvale"; Level = 23; Type = "Humanoid"; Locations = { 19804260; }; };
+	[ 10644 ] = { Name = "Mist Howler"; WorldID = 1; Zone = "Ashenvale"; Level = 22; Type = "Beast"; Locations = { 16403020; 22103020; 22303570; 25301880; }; };
+	[ 10647 ] = { Name = "Prince Raze"; WorldID = 1; Zone = "Ashenvale"; Level = 32; Type = "Demon"; Locations = { 77404620; }; };
+	[ 10817 ] = { Name = "Duggan Wildhammer"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 55; Type = "Humanoid"; Locations = { 12207260; 16005920; 22308140; 28107610; 36406310; }; };
+	[ 10821 ] = { Name = "Hed'mush the Rotting"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 57; Type = "Undead"; Locations = { 34206840; 50302030; 61204280; }; };
+	[ 10822 ] = { Name = "Warlord Thresh'jin"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 58; Type = "Humanoid"; Locations = { 60401770; 66701000; }; };
+	[ 10823 ] = { Name = "Zul'Brin Warpbranch"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 59; Type = "Humanoid"; Locations = { 64901140; }; };
+	[ 10824 ] = { Name = "Ranger Lord Hawkspear"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 60; Type = "Humanoid"; Locations = { 48201450; }; };
+	[ 10825 ] = { Name = "Gish the Unmoving"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 56; Type = "Undead"; Locations = { 46203820; 51904880; 57104950; 63605090; }; };
+	[ 10826 ] = { Name = "Lord Darkscythe"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 57; Type = "Undead"; Locations = { 22102810; 29902100; 34703020; 39302280; }; };
+	[ 10827 ] = { Name = "Deathspeaker Selendre"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 56; Type = "Humanoid"; Locations = { 34804700; 77103460; 79404020; }; };
+	[ 10828 ] = { Name = "High General Abbendis"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 59; Type = "Humanoid"; Elite = true; Locations = { 74807840; 82207940; }; };
+	[ 10899 ] = { Name = "Goraluk Anvilcrack"; WorldID = "Blackrock Spire"; Zone = "Blackrock Spire"; Level = 61; Type = "Humanoid"; Elite = true; };
+	[ 11383 ] = { Name = "High Priestess Hai'watna"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 57; Type = "Humanoid"; Elite = true; Locations = { 50801650; }; };
+	[ 11447 ] = { Name = "Mushgog"; WorldID = "Dire Maul"; Zone = "Dire Maul"; Level = 60; Type = "Elemental"; Elite = true; Locations = { 43406740; }; };
+	[ 11497 ] = { Name = "The Razza"; WorldID = 1; Zone = "Feralas"; Level = 60; Type = "Beast"; Elite = true; Locations = { 62303080; }; };
+	[ 11688 ] = { Name = "Cursed Centaur"; WorldID = "Maraudon"; Zone = "Maraudon"; Level = 43; Type = "Humanoid"; Locations = { 38305800; }; };
+	[ 12037 ] = { Name = "Ursol'lok"; WorldID = 1; Zone = "Ashenvale"; Level = 31; Type = "Beast"; Locations = { 82804810; 83205600; 86906870; }; };
+	[ 12431 ] = { Name = "Gorefang"; WorldID = 2; Zone = "Silverpine Forest"; Level = 13; Type = "Beast"; Locations = { 46301800; 46302570; 59400770; }; };
+	[ 12432 ] = { Name = "Old Vicejaw"; WorldID = 2; Zone = "Silverpine Forest"; Level = 14; Type = "Beast"; Locations = { 51106260; 52405070; 56106160; }; };
+	[ 12433 ] = { Name = "Krethis Shadowspinner"; WorldID = 2; Zone = "Silverpine Forest"; Level = 15; Type = "Beast"; Locations = { 34701030; 36101580; }; };
+	[ 13896 ] = { Name = "Scalebeard"; WorldID = 1; Zone = "Azshara"; Level = 52; Type = "Beast"; Elite = true; Locations = { 53404990; }; };
+	[ 14221 ] = { Name = "Gravis Slipknot"; WorldID = 2; Zone = "Alterac Mountains"; Level = 36; Type = "Humanoid"; Locations = { 58004240; }; };
+	[ 14222 ] = { Name = "Araga"; WorldID = 2; Zone = "Alterac Mountains"; Level = 35; Type = "Beast"; Locations = { 28107500; 29408490; 31006980; 37909030; 40108510; }; };
+	[ 14223 ] = { Name = "Cranky Benj"; WorldID = 2; Zone = "Alterac Mountains"; Level = 32; Type = "Beast"; Locations = { 12705430; 17805240; 21604700; 27304140; 30503240; 34302680; 36701640; }; };
+	[ 14224 ] = { Name = "7:XT"; WorldID = 2; Zone = "Badlands"; Level = 41; Type = "Mechanical"; Locations = { 3307930; 12506760; 17807880; 29506500; 54605200; 57406650; }; };
+	[ 14225 ] = { Name = "Prince Kellen"; WorldID = 1; Zone = "Desolace"; Level = 33; Type = "Demon"; Locations = { 74301210; 76101820; 77202350; }; };
+	[ 14226 ] = { Name = "Kaskk"; WorldID = 1; Zone = "Desolace"; Level = 40; Type = "Demon"; Locations = { 50007210; 50308150; 55407640; }; };
+	[ 14227 ] = { Name = "Hissperak"; WorldID = 1; Zone = "Desolace"; Level = 37; Type = "Beast"; Locations = { 41404700; 43006090; 44104150; 46605420; 55104760; }; };
+	[ 14228 ] = { Name = "Giggler"; WorldID = 1; Zone = "Desolace"; Level = 34; Type = "Beast"; Locations = { 50100870; 57300840; 60202240; 62403450; 65301730; 66102410; }; };
+	[ 14229 ] = { Name = "Accursed Slitherblade"; WorldID = 1; Zone = "Desolace"; Level = 35; Type = "Humanoid"; Locations = { 29201450; 30702000; 34400430; 39901350; }; };
+	[ 14230 ] = { Name = "Burgle Eye"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 37; Type = "Humanoid"; Locations = { 57401670; 59200900; }; };
+	[ 14231 ] = { Name = "Drogoth the Roamer"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 37; Type = "Elemental"; Locations = { 36601340; 39201930; }; };
+	[ 14232 ] = { Name = "Dart"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 38; Type = "Beast"; Locations = { 46701700; }; };
+	[ 14233 ] = { Name = "Ripscale"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 37; Type = "Beast"; Locations = { 37205050; 41605680; 42905160; 49005740; }; };
+	[ 14234 ] = { Name = "Hayoc"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 39; Type = "Beast"; Locations = { 49906510; 51805960; 55306560; }; };
+	[ 14235 ] = { Name = "The Rot"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 40; Locations = { 50805040; 51005780; }; };
+	[ 14236 ] = { Name = "Lord Angler"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 37; Type = "Humanoid"; Locations = { 55006290; }; };
+	[ 14237 ] = { Name = "Oozeworm"; WorldID = 1; Zone = "Dustwallow Marsh"; Level = 38; Type = "Beast"; Locations = { 35106950; 36406240; 54206940; }; };
+	[ 14266 ] = { Name = "Shanda the Spinner"; WorldID = 2; Zone = "Loch Modan"; Level = 19; Type = "Beast"; Locations = { 76005500; }; };
+	[ 14267 ] = { Name = "Emogg the Crusher"; WorldID = 2; Zone = "Loch Modan"; Level = 19; Type = "Humanoid"; Elite = true; Locations = { 65202040; 68502710; 72202170; 73602880; }; };
+	[ 14268 ] = { Name = "Lord Condar"; WorldID = 2; Zone = "Loch Modan"; Level = 16; Type = "Beast"; Locations = { 61207650; 65900280; 73406670; 77307440; }; };
+	[ 14269 ] = { Name = "Seeker Aqualon"; WorldID = 2; Zone = "Redridge Mountains"; Level = 21; Type = "Elemental"; Locations = { 46305790; 51706180; 57805670; 63106260; 68107180; 71506260; 73207040; }; };
+	[ 14270 ] = { Name = "Squiddic"; WorldID = 2; Zone = "Redridge Mountains"; Level = 19; Type = "Humanoid"; Locations = { 36105830; 36405030; 39406430; 41805220; 44706410; 45204640; 47505380; 49905940; 50006780; }; };
+	[ 14271 ] = { Name = "Ribchaser"; WorldID = 2; Zone = "Redridge Mountains"; Level = 17; Type = "Humanoid"; Locations = { 12906630; 13706050; 28808250; 34408230; 99307000; }; };
+	[ 14272 ] = { Name = "Snarlflare"; WorldID = 2; Zone = "Redridge Mountains"; Level = 18; Type = "Dragonkin"; Locations = { 35906680; 41603180; 48203400; }; };
+	[ 14273 ] = { Name = "Boulderheart"; WorldID = 2; Zone = "Redridge Mountains"; Level = 25; Type = "Giant"; Locations = { 86406200; 87806750; }; };
+	[ 14275 ] = { Name = "Tamra Stormpike"; WorldID = 2; Zone = "Hillsbrad Foothills"; Level = 28; Type = "Humanoid"; Elite = true; Locations = { 47504580; 70207660; 72208210; }; };
+	[ 14276 ] = { Name = "Scargil"; WorldID = 2; Zone = "Hillsbrad Foothills"; Level = 30; Type = "Humanoid"; Locations = { 23106770; 23107290; 28107350; }; };
+	[ 14277 ] = { Name = "Lady Zephris"; WorldID = 2; Zone = "Hillsbrad Foothills"; Level = 33; Type = "Humanoid"; Locations = { 4805470; 58107120; 61907720; 66308580; }; };
+	[ 14278 ] = { Name = "Ro'Bark"; WorldID = 2; Zone = "Hillsbrad Foothills"; Level = 28; Type = "Humanoid"; Locations = { 62906130; }; };
+	[ 14279 ] = { Name = "Creepthess"; WorldID = 2; Zone = "Hillsbrad Foothills"; Level = 24; Type = "Beast"; Locations = { 23905400; 28706470; 34305940; 38905250; }; };
+	[ 14280 ] = { Name = "Big Samras"; WorldID = 2; Zone = "Hillsbrad Foothills"; Level = 27; Type = "Beast"; Locations = { 71902860; 84404900; 86504130; }; };
+	[ 14281 ] = { Name = "Jimmy the Bleeder"; WorldID = 2; Zone = "Alterac Mountains"; Level = 23; Type = "Humanoid"; Locations = { 48308250; 58306900; }; };
+	[ 14339 ] = { Name = "Death Howl"; WorldID = 1; Zone = "Felwood"; Level = 49; Type = "Beast"; Locations = { 48207830; 56608940; }; };
+	[ 14340 ] = { Name = "Alshirr Banebreath"; WorldID = 1; Zone = "Felwood"; Level = 54; Type = "Demon"; Locations = { 39908530; }; };
+	[ 14342 ] = { Name = "Ragepaw"; WorldID = 1; Zone = "Felwood"; Level = 51; Type = "Humanoid"; Locations = { 48309230; }; };
+	[ 14343 ] = { Name = "Olm the Wise"; WorldID = 1; Zone = "Felwood"; Level = 52; Type = "Beast"; Locations = { 54302560; 56200850; 57801860; }; };
+	[ 14344 ] = { Name = "Mongress"; WorldID = 1; Zone = "Felwood"; Level = 50; Type = "Beast"; Locations = { 46908360; }; };
+	[ 14345 ] = { Name = "The Ongar"; WorldID = 1; Zone = "Felwood"; Level = 51; Locations = { 38604870; 43705040; }; };
+	[ 14424 ] = { Name = "Mirelow"; WorldID = 2; Zone = "Wetlands"; Level = 25; Type = "Elemental"; Locations = { 19403110; 22302330; 24903770; }; };
+	[ 14425 ] = { Name = "Gnawbone"; WorldID = 2; Zone = "Wetlands"; Level = 24; Type = "Humanoid"; Locations = { 30302880; 33003390; 38302940; 38503470; }; };
+	[ 14426 ] = { Name = "Harb Foulmountain"; WorldID = 1; Zone = "Thousand Needles"; Level = 27; Type = "Humanoid"; Locations = { 32302860; 37503160; }; };
+	[ 14427 ] = { Name = "Gibblesnik"; WorldID = 1; Zone = "Thousand Needles"; Level = 28; Type = "Humanoid"; Locations = { 51204350; 59304720; 60305900; }; };
+	[ 14428 ] = { Name = "Uruson"; WorldID = 1; Zone = "Teldrassil"; Level = 7; Type = "Humanoid"; Locations = { 66805800; }; };
+	[ 14429 ] = { Name = "Grimmaw"; WorldID = 1; Zone = "Teldrassil"; Level = 11; Type = "Humanoid"; Locations = { 39608060; }; };
+	[ 14430 ] = { Name = "Duskstalker"; WorldID = 1; Zone = "Teldrassil"; Level = 9; Type = "Beast"; Locations = { 51207730; 56907670; }; };
+	[ 14431 ] = { Name = "Fury Shelda"; WorldID = 1; Zone = "Teldrassil"; Level = 8; Type = "Humanoid"; Locations = { 34503440; 36903980; }; };
+	[ 14432 ] = { Name = "Threggil"; WorldID = 1; Zone = "Teldrassil"; Level = 6; Type = "Demon"; Locations = { 51205040; }; };
+	[ 14433 ] = { Name = "Sludginn"; WorldID = 2; Zone = "Wetlands"; Level = 30; Locations = { 11806970; }; };
+	[ 14445 ] = { Name = "Lord Captain Wyrmak"; WorldID = 2; Zone = "Swamp of Sorrows"; Level = 45; Type = "Dragonkin"; Elite = true; Locations = { 62303710; 62904210; 68303830; 73403840; 76306640; 77306130; 77605220; 78004390; 82905430; }; };
+	[ 14446 ] = { Name = "Fingat"; WorldID = 2; Zone = "Swamp of Sorrows"; Level = 43; Type = "Humanoid"; Locations = { 62108740; 64808160; }; };
+	[ 14447 ] = { Name = "Gilmorian"; WorldID = 2; Zone = "Swamp of Sorrows"; Level = 43; Type = "Humanoid"; Locations = { 78100520; 84009300; 86508670; 92303430; 93606630; 95104270; 95405320; }; };
+	[ 14448 ] = { Name = "Molt Thorn"; WorldID = 2; Zone = "Swamp of Sorrows"; Level = 42; Type = "Elemental"; Locations = { 22304680; 23504110; 25305290; 26603600; 29804450; 32003290; 35104340; 37503450; 43003340; }; };
+	[ 14471 ] = { Name = "Setis"; WorldID = 1; Zone = "Silithus"; Level = 61; Type = "Humanoid"; Elite = true; Locations = { 19708250; 20908850; }; };
+	[ 14472 ] = { Name = "Gretheer"; WorldID = 1; Zone = "Silithus"; Level = 57; Type = "Beast"; Locations = { 27904140; 39205550; 47206130; 61506560; }; };
+	[ 14473 ] = { Name = "Lapress"; WorldID = 1; Zone = "Silithus"; Level = 60; Type = "Beast"; Elite = true; Locations = { 51308100; 54307230; 58907850; 60808620; }; };
+	[ 14474 ] = { Name = "Zora"; WorldID = 1; Zone = "Silithus"; Level = 59; Elite = true; Locations = { 17006770; 19105880; 23307180; 24106190; 26505690; }; };
+	[ 14475 ] = { Name = "Rex Ashil"; WorldID = 1; Zone = "Silithus"; Level = 57; Elite = true; Locations = { 46102860; 46402210; }; };
+	[ 14476 ] = { Name = "Krellack"; WorldID = 1; Zone = "Silithus"; Level = 56; Type = "Beast"; Locations = { 58901860; 61004280; 65303090; 68304090; }; };
+	[ 14477 ] = { Name = "Grubthor"; WorldID = 1; Zone = "Silithus"; Level = 58; Type = "Beast"; Locations = { 27208050; 35107220; 44507880; 48306690; }; };
+	[ 14478 ] = { Name = "Huricanian"; WorldID = 1; Zone = "Silithus"; Level = 58; Type = "Elemental"; Locations = { 20602310; 21901710; 25802780; 28901580; }; };
+	[ 14479 ] = { Name = "Twilight Lord Everun"; WorldID = 1; Zone = "Silithus"; Level = 60; Type = "Humanoid"; Locations = { 18008310; 24703310; 38304450; }; };
+	[ 14487 ] = { Name = "Gluggle"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 37; Type = "Humanoid"; Locations = { 33802040; }; };
+	[ 14488 ] = { Name = "Roloch"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 38; Type = "Humanoid"; Locations = { 35202780; 45008630; }; };
+	[ 14490 ] = { Name = "Rippa"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 44; Type = "Beast"; Locations = { 22906100; 23107490; 24406930; 26308520; 31408630; 34807960; 35707400; 40006550; }; };
+	[ 14491 ] = { Name = "Kurmokk"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 42; Type = "Beast"; Locations = { 31206850; 34406310; }; };
+	[ 14492 ] = { Name = "Verifonix"; WorldID = 2; Zone = "Stranglethorn Vale"; Level = 42; Type = "Humanoid"; Locations = { 34505860; }; };
+	[ 16179 ] = { Name = "Hyakiss the Lurker"; WorldID = "Karazhan"; Zone = "Karazhan"; Level = 73; Type = "Beast"; Elite = true; };
+	[ 16180 ] = { Name = "Shadikith the Glider"; WorldID = "Karazhan"; Zone = "Karazhan"; Level = 73; Type = "Beast"; Elite = true; };
+	[ 16181 ] = { Name = "Rokad the Ravager"; WorldID = "Karazhan"; Zone = "Karazhan"; Level = 73; Type = "Demon"; Elite = true; };
+	[ 16184 ] = { Name = "Nerubian Overseer"; WorldID = 2; Zone = "Eastern Plaguelands"; Level = 60; Type = "Undead"; Elite = true; Locations = { 5203400; 10102850; 15202830; }; };
+	[ 16854 ] = { Name = "Eldinarcus"; WorldID = 2; Zone = "Eversong Woods"; Level = 11; Type = "Elemental"; Locations = { 68104580; }; };
+	[ 16855 ] = { Name = "Tregla"; WorldID = 2; Zone = "Eversong Woods"; Level = 10; Type = "Humanoid"; Locations = { 62807950; 65006750; 67907970; 69007300; }; };
+	[ 17144 ] = { Name = "Goretooth"; WorldID = 3; Zone = "Nagrand"; Level = 65; Type = "Beast"; Locations = { 31205220; 35104620; 40504360; 55702700; 75007640; }; };
+	[ 18241 ] = { Name = "Crusty"; WorldID = 1; Zone = "Desolace"; Level = 32; Type = "Beast"; Locations = { 27803470; 29702460; 30101800; }; };
+	[ 18677 ] = { Name = "Mekthorg the Wild"; WorldID = 3; Zone = "Hellfire Peninsula"; Level = 61; Type = "Humanoid"; Locations = { 41606950; 42806440; 45304470; 46605930; 48705080; 54304970; 64907190; 66507740; 70707170; }; };
+	[ 18678 ] = { Name = "Fulgorge"; WorldID = 3; Zone = "Hellfire Peninsula"; Level = 62; Locations = { 23505870; 24305320; 25504650; 28006770; 28904120; 30806210; 36605300; 40706870; 42505120; 46606970; 53907150; }; };
+	[ 18679 ] = { Name = "Vorakem Doomspeaker"; WorldID = 3; Zone = "Hellfire Peninsula"; Level = 62; Type = "Demon"; Locations = { 41702920; 58103110; 63803120; 70104610; 74204030; }; };
+	[ 18680 ] = { Name = "Marticar"; WorldID = 3; Zone = "Zangarmarsh"; Level = 63; Type = "Beast"; Locations = { 10005210; 11304670; 14904060; 17603420; 25304290; 38103810; 43803490; 49003100; 54103330; 69503950; 73804600; 77205240; }; };
+	[ 18681 ] = { Name = "Coilfang Emissary"; WorldID = 3; Zone = "Zangarmarsh"; Level = 63; Type = "Humanoid"; Locations = { 25103770; 25804270; 59903690; 62206920; 63404430; 70407280; 73208230; }; };
+	[ 18682 ] = { Name = "Bog Lurker"; WorldID = 3; Zone = "Zangarmarsh"; Level = 63; Type = "Elemental"; Locations = { 22502690; 25802020; 40606190; 47905970; 50406660; 82707870; 85708550; 86009050; }; };
+	[ 18683 ] = { Name = "Voidhunter Yar"; WorldID = 3; Zone = "Nagrand"; Level = 68; Type = "Demon"; Locations = { 32107210; 33606710; 37807650; }; };
+	[ 18684 ] = { Name = "Bro'Gaz the Clanless"; WorldID = 3; Zone = "Nagrand"; Level = 66; Type = "Humanoid"; Locations = { 25605210; 27204310; 30203340; 51105180; 60607180; 65707680; }; };
+	[ 18685 ] = { Name = "Okrek"; WorldID = 3; Zone = "Terokkar Forest"; Level = 64; Type = "Humanoid"; Locations = { 31204300; 49401780; 56107030; 57206480; 58402300; }; };
+	[ 18686 ] = { Name = "Doomsayer Jurim"; WorldID = 3; Zone = "Terokkar Forest"; Level = 64; Type = "Humanoid"; Locations = { 35603840; 36203320; 40902540; 44906920; 46402650; 51502500; 55203240; 60403480; 65204040; 67604590; }; };
+	[ 18689 ] = { Name = "Crippler"; WorldID = 3; Zone = "Terokkar Forest"; Level = 65; Type = "Undead"; Locations = { 28106330; 29105640; 32405120; 34105660; 37306420; 38804800; 41305360; 45107350; 45206070; 45207910; 46605280; 50207120; 50406270; }; };
+	[ 18690 ] = { Name = "Morcrush"; WorldID = 3; Zone = "Blade's Edge Mountains"; Level = 68; Type = "Giant"; Locations = { 45103320; 59202530; 61901980; 61905370; 65204840; 67007310; 67606490; 68403190; 70404090; 73602610; 73903320; }; };
+	[ 18692 ] = { Name = "Hemathion"; WorldID = 3; Zone = "Blade's Edge Mountains"; Level = 68; Type = "Dragonkin"; Locations = { 28106590; 28904840; 29407090; 29604330; 31805590; 33403330; 35104900; }; };
+	[ 18693 ] = { Name = "Speaker Mar'grom"; WorldID = 3; Zone = "Blade's Edge Mountains"; Level = 68; Type = "Humanoid"; Locations = { 39105640; 40804710; 42308250; 44807740; 55603630; 56102530; 57203070; 64001870; 65902550; }; };
+	[ 18694 ] = { Name = "Collidus the Warp-Watcher"; WorldID = 3; Zone = "Shadowmoon Valley"; Level = 68; Type = "Demon"; Locations = { 36204550; 41504700; 45405200; 55107120; 58202330; 60306870; 62306250; 63302260; 65506930; 66902790; 70806690; 72903020; }; };
+	[ 18695 ] = { Name = "Ambassador Jerrikar"; WorldID = 3; Zone = "Shadowmoon Valley"; Level = 69; Type = "Demon"; Locations = { 28204880; 29305560; 45002900; 45606750; 56003830; 68306200; }; };
+	[ 18696 ] = { Name = "Kraator"; WorldID = 3; Zone = "Shadowmoon Valley"; Level = 68; Type = "Demon"; Locations = { 31304520; 41903990; 42006910; 45201270; 59604700; }; };
+	[ 18697 ] = { Name = "Chief Engineer Lorthander"; WorldID = 3; Zone = "Netherstorm"; Level = 69; Type = "Humanoid"; Locations = { 26104080; 46208160; 58006280; }; };
+	[ 18698 ] = { Name = "Ever-Core the Punisher"; WorldID = 3; Zone = "Netherstorm"; Level = 68; Type = "Elemental"; Locations = { 19407220; 20506650; 23703940; 25007550; 25706500; 27607010; 28604460; 57504170; 59303390; 60404670; 64603220; 65804670; 67203810; }; };
+	[ 20932 ] = { Name = "Nuramoc"; WorldID = 3; Zone = "Netherstorm"; Level = 70; Type = "Beast"; Elite = true; Locations = { 23207920; 29108080; 35302460; 43907770; 61205950; 67306150; }; };
+	[ 22060 ] = { Name = "Fenissa the Assassin"; WorldID = 1; Zone = "Bloodmyst Isle"; Level = 18; Type = "Humanoid"; Locations = { 14805170; 16405730; 21805830; 23904880; 36106100; 41106100; }; };
+	[ 22062 ] = { Name = "Dr. Whitherlimb"; WorldID = 2; Zone = "Ghostlands"; Level = 18; Type = "Undead"; Locations = { 29008920; 34304830; 35408860; 40004990; }; };
+	[ 32357 ] = { Name = "Old Crystalbark"; WorldID = 4; Zone = "Borean Tundra"; Level = 72; Type = "Elemental"; Elite = true; Locations = { 21302840; 26503540; 35402890; }; };
+	[ 32358 ] = { Name = "Fumblub Gearwind"; WorldID = 4; Zone = "Borean Tundra"; Level = 71; Type = "Mechanical"; Elite = true; Locations = { 57201990; 59002590; 60301410; 61003200; 62402020; 65903790; 67102780; 67501930; 70703290; 72302720; }; };
+	[ 32361 ] = { Name = "Icehorn"; WorldID = 4; Zone = "Borean Tundra"; Level = 71; Type = "Beast"; Elite = true; Locations = { 80804620; 81403140; 88303970; 91803260; }; };
+	[ 32377 ] = { Name = "Perobas the Bloodthirster"; WorldID = 4; Zone = "Howling Fjord"; Level = 71; Type = "Humanoid"; Elite = true; Locations = { 52401180; 60702070; 68301740; }; };
+	[ 32386 ] = { Name = "Vigdis the War Maiden"; WorldID = 4; Zone = "Howling Fjord"; Level = 71; Type = "Humanoid"; Elite = true; Locations = { 68004670; 68905860; 70905300; 73704030; 74404770; 74805890; }; };
+	[ 32398 ] = { Name = "King Ping"; WorldID = 4; Zone = "Howling Fjord"; Level = 71; Type = "Beast"; Elite = true; Locations = { 26006420; 30807080; 31105640; 32007580; }; };
+	[ 32400 ] = { Name = "Tukemuth"; WorldID = 4; Zone = "Dragonblight"; Level = 73; Type = "Beast"; Elite = true; Locations = { 54105810; 56905220; 57704410; 59003870; 59902910; 60306080; 62305020; 64003670; 67103040; 67105990; 67404270; 67705490; 69004810; }; };
+	[ 32409 ] = { Name = "Crazed Indu'le Survivor"; WorldID = 4; Zone = "Dragonblight"; Level = 73; Type = "Humanoid"; Elite = true; Locations = { 15604570; 15705820; 23505300; 26705850; 33105730; }; };
+	[ 32417 ] = { Name = "Scarlet Highlord Daion"; WorldID = 4; Zone = "Dragonblight"; Level = 73; Type = "Humanoid"; Elite = true; Locations = { 69307520; 71302250; 71907010; 85903660; }; };
+	[ 32422 ] = { Name = "Grocklar"; WorldID = 4; Zone = "Grizzly Hills"; Level = 74; Type = "Giant"; Elite = true; Locations = { 8804210; 10907130; 11205390; 12904850; 16106970; 20005570; 21407140; 25105610; 28004190; 62406370; 66505530; 94704070; }; };
+	[ 32429 ] = { Name = "Seething Hate"; WorldID = 4; Zone = "Grizzly Hills"; Level = 73; Elite = true; Locations = { 28304560; 38404980; }; };
+	[ 32438 ] = { Name = "Syreian the Bonecarver"; WorldID = 4; Zone = "Grizzly Hills"; Level = 73; Type = "Humanoid"; Elite = true; Locations = { 64903500; 66202910; 66304090; 72803420; 76104130; }; };
+	[ 32447 ] = { Name = "Zul'drak Sentinel"; WorldID = 4; Zone = "Zul'Drak"; Level = 77; Type = "Elemental"; Elite = true; Locations = { 21008270; 26708280; 40405270; 40406070; 42707110; 47406340; 48208020; }; };
+	[ 32471 ] = { Name = "Griegen"; WorldID = 4; Zone = "Zul'Drak"; Level = 75; Type = "Undead"; Elite = true; Locations = { 14205580; 17507070; 20907880; 26005520; 26207120; }; };
+	[ 32475 ] = { Name = "Terror Spinner"; WorldID = 4; Zone = "Zul'Drak"; Level = 76; Type = "Beast"; Elite = true; Locations = { 60803650; 72602350; 77604360; }; };
+	[ 32481 ] = { Name = "Aotona"; WorldID = 4; Zone = "Sholazar Basin"; Level = 75; Type = "Beast"; Elite = true; Locations = { 40805850; 41006840; 42107390; 42705200; 52307210; 54305200; 57306530; }; };
+	[ 32485 ] = { Name = "King Krush"; WorldID = 4; Zone = "Sholazar Basin"; Level = 75; Type = "Beast"; Elite = true; Locations = { 25504840; 27105910; 27807110; 33103550; 47204340; 51008010; 52304230; 56008300; 63908270; }; };
+	[ 32487 ] = { Name = "Putridus the Ancient"; WorldID = 4; Zone = "Icecrown"; Level = 80; Type = "Giant"; Elite = true; Locations = { 44206020; 44705510; 47004870; 49204160; 54804110; 60204100; 64204610; 65005400; 67205930; 68406910; }; };
+	[ 32491 ] = { Name = "Time-Lost Proto Drake"; WorldID = 4; Zone = "The Storm Peaks"; Level = 80; Type = "Dragonkin"; Elite = true; Locations = { 26407380; 26606160; 27704690; 28305220; 28403820; 28506790; 28807980; 33606600; 33904550; 36207780; 36907110; 37705950; 40103080; 42106880; 42705960; 44408180; 47304390; 48406630; 51803360; }; };
+	[ 32495 ] = { Name = "Hildana Deathstealer"; WorldID = 4; Zone = "Icecrown"; Level = 80; Type = "Undead"; Elite = true; Locations = { 28304480; 29202840; 29703810; 34302760; 52705570; 58106270; 58205450; }; };
+	[ 32500 ] = { Name = "Dirkee"; WorldID = 4; Zone = "The Storm Peaks"; Level = 80; Type = "Mechanical"; Elite = true; Locations = { 37605850; 41004020; 41005070; 67704740; }; };
+	[ 32501 ] = { Name = "High Thane Jorfus"; WorldID = 4; Zone = "Icecrown"; Level = 80; Type = "Undead"; Elite = true; Locations = { 31406330; 32207010; 47908440; 74003240; }; };
+	[ 32517 ] = { Name = "Loque'nahak"; WorldID = 4; Zone = "Sholazar Basin"; Level = 76; Type = "Beast"; Elite = true; Locations = { 21307020; 29507190; 30404540; 30406680; 36203060; 50908130; 58202170; 66207920; 70907040; }; };
+	[ 32630 ] = { Name = "Vyragosa"; WorldID = 4; Zone = "The Storm Peaks"; Level = 80; Type = "Dragonkin"; Elite = true; Locations = { 27007110; 27306000; 28606540; 30208110; 35404270; 36006630; 36908040; 39905990; 41206790; }; };
+	[ 33776 ] = { Name = "Gondria"; WorldID = 4; Zone = "Zul'Drak"; Level = 77; Type = "Beast"; Elite = true; Locations = { 61406320; 63104200; 67707770; 69304750; 77406980; }; };
+	[ 35189 ] = { Name = "Skoll"; WorldID = 4; Zone = "The Storm Peaks"; Level = 80; Type = "Beast"; Elite = true; Locations = { 17301670; 27805160; 30206460; 45506280; 53702910; }; };
+	[ 38453 ] = { Name = "Arcturis"; WorldID = 4; Zone = "Grizzly Hills"; Level = 74; Type = "Beast"; Elite = true; Locations = { 30905370; }; };
 };
-local RareNames = { --- [ NpcID ] = Name.
-	[ 61 ] = "Thuros Lightfingers";
-	[ 79 ] = "Narg the Taskmaster";
-	[ 99 ] = "Morgaine the Sly";
-	[ 100 ] = "Gruff Swiftbite";
-	[ 462 ] = "Vultros";
-	[ 471 ] = "Mother Fang";
-	[ 472 ] = "Fedfennel";
-	[ 503 ] = "Lord Malathrom";
-	[ 506 ] = "Sergeant Brashclaw";
-	[ 507 ] = "Fenros";
-	[ 519 ] = "Slark";
-	[ 520 ] = "Brack";
-	[ 521 ] = "Lupos";
-	[ 534 ] = "Nefaru";
-	[ 572 ] = "Leprithus";
-	[ 573 ] = "Foe Reaper 4000";
-	[ 574 ] = "Naraxis";
-	[ 584 ] = "Kazon";
-	[ 616 ] = "Chatter";
-	[ 763 ] = "Lost One Chieftain";
-	[ 771 ] = "Commander Felstrom";
-	[ 947 ] = "Rohh the Silent";
-	[ 1037 ] = "Dragonmaw Battlemaster";
-	[ 1063 ] = "Jade";
-	[ 1106 ] = "Lost One Cook";
-	[ 1112 ] = "Leech Widow";
-	[ 1119 ] = "Hammerspine";
-	[ 1130 ] = "Bjarn";
-	[ 1132 ] = "Timber";
-	[ 1137 ] = "Edan the Howler";
-	[ 1140 ] = "Razormaw Matriarch";
-	[ 1260 ] = "Great Father Arctikus";
-	[ 1398 ] = "Boss Galgosh";
-	[ 1399 ] = "Magosh";
-	[ 1424 ] = "Master Digger";
-	[ 1425 ] = "Grizlak";
-	[ 1531 ] = "Lost Soul";
-	[ 1533 ] = "Tormented Spirit";
-	[ 1552 ] = "Scale Belly";
-	[ 1837 ] = "Scarlet Judge";
-	[ 1838 ] = "Scarlet Interrogator";
-	[ 1839 ] = "Scarlet High Clerist";
-	[ 1841 ] = "Scarlet Executioner";
-	[ 1843 ] = "Foreman Jerris";
-	[ 1844 ] = "Foreman Marcrid";
-	[ 1847 ] = "Foulmane";
-	[ 1848 ] = "Lord Maldazzar";
-	[ 1850 ] = "Putridius";
-	[ 1851 ] = "The Husk";
-	[ 1885 ] = "Scarlet Smith";
-	[ 1910 ] = "Muad";
-	[ 1911 ] = "Deeb";
-	[ 1920 ] = "Dalaran Spellscribe";
-	[ 1936 ] = "Farmer Solliden";
-	[ 1944 ] = "Rot Hide Bruiser";
-	[ 1948 ] = "Snarlmane";
-	[ 2090 ] = "Ma'ruk Wyrmscale";
-	[ 2108 ] = "Garneg Charskull";
-	[ 2172 ] = "Strider Clutchmother";
-	[ 2175 ] = "Shadowclaw";
-	[ 2184 ] = "Lady Moongazer";
-	[ 2186 ] = "Carnivous the Breaker";
-	[ 2191 ] = "Licillin";
-	[ 2192 ] = "Firecaller Radison";
-	[ 2258 ] = "Stone Fury";
-	[ 2283 ] = "Ravenclaw Regent";
-	[ 2447 ] = "Narillasanz";
-	[ 2452 ] = "Skhowl";
-	[ 2453 ] = "Lo'Grosh";
-	[ 2476 ] = "Large Loch Crocolisk";
-	[ 2541 ] = "Lord Sakrasis";
-	[ 2598 ] = "Darbel Montrose";
-	[ 2600 ] = "Singer";
-	[ 2601 ] = "Foulbelly";
-	[ 2602 ] = "Ruul Onestone";
-	[ 2603 ] = "Kovork";
-	[ 2604 ] = "Molok the Crusher";
-	[ 2605 ] = "Zalas Witherbark";
-	[ 2606 ] = "Nimar the Slayer";
-	[ 2609 ] = "Geomancer Flintdagger";
-	[ 2744 ] = "Shadowforge Commander";
-	[ 2749 ] = "Siege Golem";
-	[ 2751 ] = "War Golem";
-	[ 2752 ] = "Rumbler";
-	[ 2753 ] = "Barnabus";
-	[ 2754 ] = "Anathemus";
-	[ 2779 ] = "Prince Nazjak";
-	[ 2850 ] = "Broken Tooth";
-	[ 2931 ] = "Zaricotl";
-	[ 3056 ] = "Ghost Howl";
-	[ 3068 ] = "Mazzranache";
-	[ 3253 ] = "Silithid Harvester";
-	[ 3270 ] = "Elder Mystic Razorsnout";
-	[ 3295 ] = "Sludge Beast";
-	[ 3398 ] = "Gesharahan";
-	[ 3470 ] = "Rathorian";
-	[ 3535 ] = "Blackmoss the Fetid";
-	[ 3581 ] = "Sewer Beast";
-	[ 3586 ] = "Miner Johnson";
-	[ 3652 ] = "Trigore the Lasher";
-	[ 3672 ] = "Boahn";
-	[ 3735 ] = "Apothecary Falthis";
-	[ 3773 ] = "Akkrilus";
-	[ 3792 ] = "Terrowulf Packlord";
-	[ 3872 ] = "Deathsworn Captain";
-	[ 4015 ] = "Pridewing Patriarch";
-	[ 4030 ] = "Vengeful Ancient";
-	[ 4066 ] = "Nal'taszar";
-	[ 4132 ] = "Silithid Ravager";
-	[ 4339 ] = "Brimgore";
-	[ 4380 ] = "Darkmist Widow";
-	[ 5343 ] = "Lady Szallah";
-	[ 5345 ] = "Diamond Head";
-	[ 5346 ] = "Bloodroar the Stalker";
-	[ 5347 ] = "Antilus the Soarer";
-	[ 5349 ] = "Arash-ethis";
-	[ 5350 ] = "Qirot";
-	[ 5352 ] = "Old Grizzlegut";
-	[ 5354 ] = "Gnarl Leafbrother";
-	[ 5356 ] = "Snarler";
-	[ 5399 ] = "Veyzhak the Cannibal";
-	[ 5400 ] = "Zekkis";
-	[ 5785 ] = "Sister Hatelash";
-	[ 5786 ] = "Snagglespear";
-	[ 5787 ] = "Enforcer Emilgund";
-	[ 5797 ] = "Aean Swiftriver";
-	[ 5798 ] = "Thora Feathermoon";
-	[ 5799 ] = "Hannah Bladeleaf";
-	[ 5800 ] = "Marcus Bel";
-	[ 5807 ] = "The Rake";
-	[ 5808 ] = "Warlord Kolkanis";
-	[ 5809 ] = "Watch Commander Zalaphil";
-	[ 5822 ] = "Felweaver Scornn";
-	[ 5823 ] = "Death Flayer";
-	[ 5824 ] = "Captain Flat Tusk";
-	[ 5826 ] = "Geolord Mottle";
-	[ 5827 ] = "Brontus";
-	[ 5828 ] = "Humar the Pridelord";
-	[ 5829 ] = "Snort the Heckler";
-	[ 5830 ] = "Sister Rathtalon";
-	[ 5831 ] = "Swiftmane";
-	[ 5832 ] = "Thunderstomp";
-	[ 5834 ] = "Azzere the Skyblade";
-	[ 5835 ] = "Foreman Grills";
-	[ 5836 ] = "Engineer Whirleygig";
-	[ 5837 ] = "Stonearm";
-	[ 5838 ] = "Brokespear";
-	[ 5841 ] = "Rocklance";
-	[ 5842 ] = "Takk the Leaper";
-	[ 5847 ] = "Heggin Stonewhisker";
-	[ 5848 ] = "Malgin Barleybrew";
-	[ 5849 ] = "Digger Flameforge";
-	[ 5851 ] = "Captain Gerogg Hammertoe";
-	[ 5859 ] = "Hagg Taurenbane";
-	[ 5863 ] = "Geopriest Gukk'rok";
-	[ 5864 ] = "Swinegart Spearhide";
-	[ 5865 ] = "Dishu";
-	[ 5915 ] = "Brother Ravenoak";
-	[ 5916 ] = "Sentinel Amarassan";
-	[ 5928 ] = "Sorrow Wing";
-	[ 5930 ] = "Sister Riven";
-	[ 5931 ] = "Foreman Rigger";
-	[ 5932 ] = "Taskmaster Whipfang";
-	[ 5933 ] = "Achellios the Banished";
-	[ 5934 ] = "Heartrazor";
-	[ 5935 ] = "Ironeye the Invincible";
-	[ 5937 ] = "Vile Sting";
-	[ 6118 ] = "Varo'then's Ghost";
-	[ 6581 ] = "Ravasaur Matriarch";
-	[ 6582 ] = "Clutchmother Zavas";
-	[ 6583 ] = "Gruff";
-	[ 6584 ] = "King Mosh";
-	[ 6585 ] = "Uhk'loc";
-	[ 6646 ] = "Monnos the Elder";
-	[ 6647 ] = "Magister Hawkhelm";
-	[ 6648 ] = "Antilos";
-	[ 6649 ] = "Lady Sesspira";
-	[ 6650 ] = "General Fangferror";
-	[ 6651 ] = "Gatekeeper Rageroar";
-	[ 6652 ] = "Master Feardred";
-	[ 7015 ] = "Flagglemurk the Cruel";
-	[ 7016 ] = "Lady Vespira";
-	[ 7017 ] = "Lord Sinslayer";
-	[ 7057 ] = "Digmaster Shovelphlange";
-	[ 7104 ] = "Dessecus";
-	[ 7137 ] = "Immolatus";
-	[ 7895 ] = "Ambassador Bloodrage";
-	[ 8199 ] = "Warleader Krazzilak";
-	[ 8200 ] = "Jin'Zallah the Sandbringer";
-	[ 8201 ] = "Omgorn the Lost";
-	[ 8202 ] = "Cyclok the Mad";
-	[ 8203 ] = "Kregg Keelhaul";
-	[ 8204 ] = "Soriid the Devourer";
-	[ 8205 ] = "Haarka the Ravenous";
-	[ 8207 ] = "Greater Firebird";
-	[ 8208 ] = "Murderous Blisterpaw";
-	[ 8210 ] = "Razortalon";
-	[ 8211 ] = "Old Cliff Jumper";
-	[ 8212 ] = "The Reak";
-	[ 8213 ] = "Ironback";
-	[ 8214 ] = "Jalinde Summerdrake";
-	[ 8215 ] = "Grimungous";
-	[ 8216 ] = "Retherokk the Berserker";
-	[ 8217 ] = "Mith'rethis the Enchanter";
-	[ 8218 ] = "Witherheart the Stalker";
-	[ 8219 ] = "Zul'arek Hatefowler";
-	[ 8277 ] = "Rekk'tilac";
-	[ 8278 ] = "Smoldar";
-	[ 8279 ] = "Faulty War Golem";
-	[ 8280 ] = "Shleipnarr";
-	[ 8281 ] = "Scald";
-	[ 8282 ] = "Highlord Mastrogonde";
-	[ 8283 ] = "Slave Master Blackheart";
-	[ 8296 ] = "Mojo the Twisted";
-	[ 8297 ] = "Magronos the Unyielding";
-	[ 8298 ] = "Akubar the Seer";
-	[ 8299 ] = "Spiteflayer";
-	[ 8300 ] = "Ravage";
-	[ 8301 ] = "Clack the Reaver";
-	[ 8302 ] = "Deatheye";
-	[ 8303 ] = "Grunter";
-	[ 8304 ] = "Dreadscorn";
-	[ 8503 ] = "Gibblewilt";
-	[ 8660 ] = "The Evalcharr";
-	[ 8923 ] = "Panzor the Invincible";
-	[ 8924 ] = "The Behemoth";
-	[ 8976 ] = "Hematos";
-	[ 8978 ] = "Thauris Balgarr";
-	[ 8979 ] = "Gruklash";
-	[ 8981 ] = "Malfunctioning Reaver";
-	[ 9024 ] = "Pyromancer Loregrain";
-	[ 9041 ] = "Warder Stilgiss";
-	[ 9042 ] = "Verek";
-	[ 9217 ] = "Spirestone Lord Magus";
-	[ 9218 ] = "Spirestone Battle Lord";
-	[ 9219 ] = "Spirestone Butcher";
-	[ 9596 ] = "Bannok Grimaxe";
-	[ 9602 ] = "Hahk'Zor";
-	[ 9604 ] = "Gorgon'och";
-	[ 9718 ] = "Ghok Bashguud";
-	[ 10077 ] = "Deathmaw";
-	[ 10078 ] = "Terrorspark";
-	[ 10119 ] = "Volchan";
-	[ 10196 ] = "General Colbatann";
-	[ 10197 ] = "Mezzir the Howler";
-	[ 10198 ] = "Kashoch the Reaver";
-	[ 10199 ] = "Grizzle Snowpaw";
-	[ 10200 ] = "Rak'shiri";
-	[ 10201 ] = "Lady Hederine";
-	[ 10202 ] = "Azurous";
-	[ 10263 ] = "Burning Felguard";
-	[ 10356 ] = "Bayne";
-	[ 10357 ] = "Ressan the Needler";
-	[ 10358 ] = "Fellicent's Shade";
-	[ 10359 ] = "Sri'skulk";
-	[ 10376 ] = "Crystal Fang";
-	[ 10509 ] = "Jed Runewatcher";
-	[ 10558 ] = "Hearthsinger Forresten";
-	[ 10559 ] = "Lady Vespia";
-	[ 10639 ] = "Rorgish Jowl";
-	[ 10640 ] = "Oakpaw";
-	[ 10641 ] = "Branch Snapper";
-	[ 10642 ] = "Eck'alom";
-	[ 10643 ] = "Mugglefin";
-	[ 10644 ] = "Mist Howler";
-	[ 10647 ] = "Prince Raze";
-	[ 10817 ] = "Duggan Wildhammer";
-	[ 10821 ] = "Hed'mush the Rotting";
-	[ 10822 ] = "Warlord Thresh'jin";
-	[ 10823 ] = "Zul'Brin Warpbranch";
-	[ 10824 ] = "Ranger Lord Hawkspear";
-	[ 10825 ] = "Gish the Unmoving";
-	[ 10826 ] = "Lord Darkscythe";
-	[ 10827 ] = "Deathspeaker Selendre";
-	[ 10828 ] = "High General Abbendis";
-	[ 10899 ] = "Goraluk Anvilcrack";
-	[ 11383 ] = "High Priestess Hai'watna";
-	[ 11447 ] = "Mushgog";
-	[ 11497 ] = "The Razza";
-	[ 11688 ] = "Cursed Centaur";
-	[ 12037 ] = "Ursol'lok";
-	[ 12431 ] = "Gorefang";
-	[ 12432 ] = "Old Vicejaw";
-	[ 12433 ] = "Krethis Shadowspinner";
-	[ 13896 ] = "Scalebeard";
-	[ 14221 ] = "Gravis Slipknot";
-	[ 14222 ] = "Araga";
-	[ 14223 ] = "Cranky Benj";
-	[ 14224 ] = "7:XT";
-	[ 14225 ] = "Prince Kellen";
-	[ 14226 ] = "Kaskk";
-	[ 14227 ] = "Hissperak";
-	[ 14228 ] = "Giggler";
-	[ 14229 ] = "Accursed Slitherblade";
-	[ 14230 ] = "Burgle Eye";
-	[ 14231 ] = "Drogoth the Roamer";
-	[ 14232 ] = "Dart";
-	[ 14233 ] = "Ripscale";
-	[ 14234 ] = "Hayoc";
-	[ 14235 ] = "The Rot";
-	[ 14236 ] = "Lord Angler";
-	[ 14237 ] = "Oozeworm";
-	[ 14266 ] = "Shanda the Spinner";
-	[ 14267 ] = "Emogg the Crusher";
-	[ 14268 ] = "Lord Condar";
-	[ 14269 ] = "Seeker Aqualon";
-	[ 14270 ] = "Squiddic";
-	[ 14271 ] = "Ribchaser";
-	[ 14272 ] = "Snarlflare";
-	[ 14273 ] = "Boulderheart";
-	[ 14275 ] = "Tamra Stormpike";
-	[ 14276 ] = "Scargil";
-	[ 14277 ] = "Lady Zephris";
-	[ 14278 ] = "Ro'Bark";
-	[ 14279 ] = "Creepthess";
-	[ 14280 ] = "Big Samras";
-	[ 14281 ] = "Jimmy the Bleeder";
-	[ 14339 ] = "Death Howl";
-	[ 14340 ] = "Alshirr Banebreath";
-	[ 14342 ] = "Ragepaw";
-	[ 14343 ] = "Olm the Wise";
-	[ 14344 ] = "Mongress";
-	[ 14345 ] = "The Ongar";
-	[ 14424 ] = "Mirelow";
-	[ 14425 ] = "Gnawbone";
-	[ 14426 ] = "Harb Foulmountain";
-	[ 14427 ] = "Gibblesnik";
-	[ 14428 ] = "Uruson";
-	[ 14429 ] = "Grimmaw";
-	[ 14430 ] = "Duskstalker";
-	[ 14431 ] = "Fury Shelda";
-	[ 14432 ] = "Threggil";
-	[ 14433 ] = "Sludginn";
-	[ 14445 ] = "Lord Captain Wyrmak";
-	[ 14446 ] = "Fingat";
-	[ 14447 ] = "Gilmorian";
-	[ 14448 ] = "Molt Thorn";
-	[ 14471 ] = "Setis";
-	[ 14472 ] = "Gretheer";
-	[ 14473 ] = "Lapress";
-	[ 14474 ] = "Zora";
-	[ 14475 ] = "Rex Ashil";
-	[ 14476 ] = "Krellack";
-	[ 14477 ] = "Grubthor";
-	[ 14478 ] = "Huricanian";
-	[ 14479 ] = "Twilight Lord Everun";
-	[ 14487 ] = "Gluggle";
-	[ 14488 ] = "Roloch";
-	[ 14490 ] = "Rippa";
-	[ 14491 ] = "Kurmokk";
-	[ 14492 ] = "Verifonix";
-	[ 16179 ] = "Hyakiss the Lurker";
-	[ 16180 ] = "Shadikith the Glider";
-	[ 16181 ] = "Rokad the Ravager";
-	[ 16184 ] = "Nerubian Overseer";
-	[ 16854 ] = "Eldinarcus";
-	[ 16855 ] = "Tregla";
-	[ 17144 ] = "Goretooth";
-	[ 18241 ] = "Crusty";
-	[ 18677 ] = "Mekthorg the Wild";
-	[ 18678 ] = "Fulgorge";
-	[ 18679 ] = "Vorakem Doomspeaker";
-	[ 18680 ] = "Marticar";
-	[ 18681 ] = "Coilfang Emissary";
-	[ 18682 ] = "Bog Lurker";
-	[ 18683 ] = "Voidhunter Yar";
-	[ 18684 ] = "Bro'Gaz the Clanless";
-	[ 18685 ] = "Okrek";
-	[ 18686 ] = "Doomsayer Jurim";
-	[ 18689 ] = "Crippler";
-	[ 18690 ] = "Morcrush";
-	[ 18692 ] = "Hemathion";
-	[ 18693 ] = "Speaker Mar'grom";
-	[ 18694 ] = "Collidus the Warp-Watcher";
-	[ 18695 ] = "Ambassador Jerrikar";
-	[ 18696 ] = "Kraator";
-	[ 18697 ] = "Chief Engineer Lorthander";
-	[ 18698 ] = "Ever-Core the Punisher";
-	[ 20932 ] = "Nuramoc";
-	[ 22060 ] = "Fenissa the Assassin";
-	[ 22062 ] = "Dr. Whitherlimb";
-	[ 32357 ] = "Old Crystalbark";
-	[ 32358 ] = "Fumblub Gearwind";
-	[ 32361 ] = "Icehorn";
-	[ 32377 ] = "Perobas the Bloodthirster";
-	[ 32386 ] = "Vigdis the War Maiden";
-	[ 32398 ] = "King Ping";
-	[ 32400 ] = "Tukemuth";
-	[ 32409 ] = "Crazed Indu'le Survivor";
-	[ 32417 ] = "Scarlet Highlord Daion";
-	[ 32422 ] = "Grocklar";
-	[ 32429 ] = "Seething Hate";
-	[ 32438 ] = "Syreian the Bonecarver";
-	[ 32447 ] = "Zul'drak Sentinel";
-	[ 32471 ] = "Griegen";
-	[ 32475 ] = "Terror Spinner";
-	[ 32481 ] = "Aotona";
-	[ 32485 ] = "King Krush";
-	[ 32487 ] = "Putridus the Ancient";
-	[ 32491 ] = "Time-Lost Proto Drake";
-	[ 32495 ] = "Hildana Deathstealer";
-	[ 32500 ] = "Dirkee";
-	[ 32501 ] = "High Thane Jorfus";
-	[ 32517 ] = "Loque'nahak";
-	[ 32630 ] = "Vyragosa";
-	[ 33776 ] = "Gondria";
-	[ 35189 ] = "Skoll";
-	[ 38453 ] = "Arcturis";
-};
+
 
 -- Only fills in NPCs that _NPCScan's own defaults didn't already define
 -- (e.g. the achievement-tied Northrend rares), so existing localization wins.
-for NpcID, Name in pairs( RareNames ) do
+for NpcID, Rare in pairs( me.Rares ) do
 	if ( not me.OptionsCharacterDefault.NPCs[ NpcID ] ) then
-		me.OptionsCharacterDefault.NPCs[ NpcID ] = Name;
-		me.OptionsCharacterDefault.NPCWorldIDs[ NpcID ] = RareWorldIDs[ NpcID ];
+		me.OptionsCharacterDefault.NPCs[ NpcID ] = Rare.Name;
+		me.OptionsCharacterDefault.NPCWorldIDs[ NpcID ] = Rare.WorldID;
 	end
 end

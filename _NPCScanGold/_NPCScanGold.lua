@@ -13,6 +13,7 @@ me.Version = GetAddOnMetadata( ..., "Version" ):match( "^([%d.]+)" );
 
 me.Options = {
 	Version = me.Version;
+	MinimapIconSettings = {}; -- LibDBIcon keeps the button's position in here
 };
 me.OptionsCharacter = {
 	Version = me.Version;
@@ -27,6 +28,8 @@ me.OptionsDefault = {
 	AchievementsAddFound = nil;
 	AlertSoundUnmute = nil;
 	AlertSound = nil; -- Default sound
+	MapPins = true;
+	MinimapIcon = true;
 };
 me.OptionsCharacterDefault = {
 	Version = me.Version;
@@ -420,6 +423,11 @@ function me.Synchronize ( Options, OptionsCharacter )
 	me.SetAchievementsAddFound( Options.AchievementsAddFound );
 	me.SetAlertSoundUnmute( Options.AlertSoundUnmute );
 	me.SetAlertSound( Options.AlertSound );
+	me.SetMapPins( Options.MapPins );
+	me.SetMinimapIcon( Options.MinimapIcon );
+	if ( Options.MinimapIconSettings ) then -- Keeps the button where the player dragged it
+		me.Options.MinimapIconSettings.minimapPos = Options.MinimapIconSettings.minimapPos;
+	end
 
 	for NpcID, Name in pairs( OptionsCharacter.NPCs ) do
 		-- If defaults, only add tamable custom mobs if the player is a hunter
