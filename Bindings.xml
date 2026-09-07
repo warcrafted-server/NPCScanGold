@@ -1,0 +1,7 @@
+<Bindings>
+	<Binding name="CLICK _NPCScanGoldButton:LeftButton" header="_NPCSCANGOLD">
+		-- Filler
+	</Binding>
+
+	<ModifiedClick action="_NPCSCANGOLD_BUTTONDRAG" default="CTRL"/>
+</Bindings>
