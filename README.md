@@ -87,5 +87,6 @@ exactly.
 
 - **Saiket** — original `_NPCScan`.
 - **Kemayo** — SilverDragon and its rares database.
+- **warcrafted-server** — merged both addons into _NPCScanGold.
 - Embedded libraries: LibStub, CallbackHandler-1.0, AceEvent-3.0, LibSharedMedia-3.0,
   LibTextTable-1.0, LibDataBroker-1.1, LibDBIcon-1.0 and LibBabble-Zone-3.0.

@@ -92,5 +92,6 @@ exactamente con el del `.toc`.
 
 - **Saiket** — _NPCScan original.
 - **Kemayo** — SilverDragon y su base de datos de raros.
+- **warcrafted-server** — fusión de ambos addons en _NPCScanGold.
 - Bibliotecas embebidas: LibStub, CallbackHandler-1.0, AceEvent-3.0, LibSharedMedia-3.0,
   LibTextTable-1.0, LibDataBroker-1.1, LibDBIcon-1.0 y LibBabble-Zone-3.0.
