@@ -1,5 +1,7 @@
 # _NPCScanGold
 
+*[English version](README.md)*
+
 Addon para World of Warcraft: Wrath of the Lich King (3.3.5a, client build 12340) que fusiona
 **[_NPCScan](http://sites.google.com/site/wowsaiket/Add-Ons/NPCScan)** (Saiket) con la base de
 datos de raros de **[SilverDragon](https://www.curseforge.com/wow/addons/silver-dragon)** (Kemayo).
@@ -81,11 +83,10 @@ caché y avisa igualmente cuando el raro está delante de ti.
 
 ## Instalación
 
-Copia la carpeta `_NPCScanGold` de este repositorio (la que contiene `_NPCScanGold.toc`) dentro de
+Copia este repositorio (la carpeta que contiene `_NPCScanGold.toc`) dentro de
 `World of Warcraft/Interface/AddOns/`, de forma que quede como
 `Interface/AddOns/_NPCScanGold/_NPCScanGold.toc`. El nombre de la carpeta tiene que coincidir
-exactamente con el del `.toc`; si copias el repositorio entero (renombrado `NPCScanGold` al
-clonarlo) el addon no aparecerá en el juego.
+exactamente con el del `.toc`.
 
 ## Créditos
 
