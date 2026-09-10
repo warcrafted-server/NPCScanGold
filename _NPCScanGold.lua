@@ -551,7 +551,7 @@ do
 	function me.Frame:OnUpdate ( Elapsed )
 		NextUpdate = NextUpdate - Elapsed;
 		if ( NextUpdate <= 0 ) then
-			LastUpdate = self.UpdateRate;
+			NextUpdate = self.UpdateRate;
 
 			if ( CriteriaUpdated ) then -- CRITERIA_UPDATE bucket
 				CriteriaUpdated = false;
